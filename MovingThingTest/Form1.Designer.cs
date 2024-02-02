@@ -28,47 +28,104 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            timer1 = new System.Windows.Forms.Timer(components);
+            pictureBox1 = new PictureBox();
+            tyleButton = new Button();
+            modeButton = new Button();
+            zoomInButton = new Button();
+            zoomOutButton = new Button();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 10;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            timer1.Enabled = true;
+            timer1.Interval = 10;
+            timer1.Tick += timer1_Tick;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Green;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(771, 450);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            pictureBox1.BackColor = Color.Green;
+            pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(771, 450);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            pictureBox1.Paint += pictureBox1_Paint;
+            // 
+            // tyleButton
+            // 
+            tyleButton.AutoSize = true;
+            tyleButton.BackColor = Color.Gray;
+            tyleButton.Location = new Point(0, 61);
+            tyleButton.Name = "tyleButton";
+            tyleButton.Size = new Size(75, 25);
+            tyleButton.TabIndex = 1;
+            tyleButton.Text = "Tyle";
+            tyleButton.UseVisualStyleBackColor = false;
+            tyleButton.Click += tyleButton_Click;
+            // 
+            // modeButton
+            // 
+            modeButton.Location = new Point(0, 12);
+            modeButton.Name = "modeButton";
+            modeButton.Size = new Size(75, 23);
+            modeButton.TabIndex = 2;
+            modeButton.Text = "Move";
+            modeButton.UseVisualStyleBackColor = true;
+            modeButton.Click += modeButton_Click;
+            // 
+            // zoomInButton
+            // 
+            zoomInButton.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            zoomInButton.Location = new Point(677, 12);
+            zoomInButton.Name = "zoomInButton";
+            zoomInButton.Size = new Size(31, 48);
+            zoomInButton.TabIndex = 3;
+            zoomInButton.Text = "+\r\n";
+            zoomInButton.UseVisualStyleBackColor = true;
+            zoomInButton.Click += zoomInButton_Click;
+            // 
+            // zoomOutButton
+            // 
+            zoomOutButton.Font = new Font("Segoe UI", 20F, FontStyle.Regular, GraphicsUnit.Point);
+            zoomOutButton.Location = new Point(714, 12);
+            zoomOutButton.Name = "zoomOutButton";
+            zoomOutButton.Size = new Size(31, 48);
+            zoomOutButton.TabIndex = 4;
+            zoomOutButton.Text = "-";
+            zoomOutButton.UseVisualStyleBackColor = true;
+            zoomOutButton.Click += zoomOutButton_Click;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(771, 450);
-            this.Controls.Add(this.pictureBox1);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(771, 450);
+            Controls.Add(zoomOutButton);
+            Controls.Add(zoomInButton);
+            Controls.Add(modeButton);
+            Controls.Add(tyleButton);
+            Controls.Add(pictureBox1);
+            DoubleBuffered = true;
+            Name = "Form1";
+            Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private System.Windows.Forms.Timer timer1;
         private PictureBox pictureBox1;
+        private Button tyleButton;
+        private Button modeButton;
+        private Button zoomInButton;
+        private Button zoomOutButton;
     }
 }
