@@ -17,6 +17,7 @@ namespace MovingThingTest
         public Cell currentCell;
         public Cell targetCell;
         public Vector2 gridCoord;
+        public Vector2 centerCoord;
 
         public float boxSize;
         Vector2 movingVec = new Vector2(0, 0);
@@ -27,6 +28,7 @@ namespace MovingThingTest
             this.screenPos = screenPos;
 
             gridCoord = grid.getGridCoordFromScreenCoord(screenPos);
+            centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
 
             this.boxSize = boxSize;
 
@@ -51,6 +53,7 @@ namespace MovingThingTest
                 movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * 0.1f;
                 gridCoord += movingVec;
             }
+            centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
 
             //if(cellStack.Count > 0 && moveCooldown <= 0)
             //{
@@ -252,109 +255,60 @@ namespace MovingThingTest
 
         public void vision(Grid grid, PaintEventArgs e)
         {
-            Vector2 centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
-            double rad = 0;
-            //while (!wallHit)
-            //{
-            //    int deltaY = Math.Abs((int)y - (int)lastY);
+            double angle = 0;
 
-            //    if(deltaY > 0)
-            //    {
-            //        for(int i = deltaY; i>0; i--)
-            //        {
-            //            if (!grid.cellArr[(int)x-1, (int)(y - i)+1].clear)
-            //            {
-            //                wallHit = true;
-            //            }
-            //        }
-            //        lastY = y;
-            //    }
-            //    else
-            //    {
-            //        x++;
-            //        if (!grid.cellArr[(int)x, (int)y].clear)
-            //        {
-            //            wallHit = true;
-            //        }
-            //        y = (x * gradient) + c;
-            //    }
 
-            //}
-            for (rad = 0; rad <= Math.PI / 2; rad = rad + 0.01)
+            while (angle < 2 * Math.PI)
             {
-                double gradient = Math.Tan(rad);
+                int signSin = Math.Sign(Math.Sin(angle));
+                int signCos = Math.Sign(Math.Cos(angle));
 
-                int left = Math.Sign(Math.Cos(rad));
-                int up = Math.Sign(Math.Sin(rad));
+                int getCellX = (-1 * signSin - 1) / 2;
+                int getCellY = (signCos - 1) / 2;
 
-                int left2 = Math.Abs((left - 1) / 2);
-                int up2 = Math.Abs((up - 1) / 2);
+                Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
 
-                bool wallHit = false;
-                double lastY = centerCoord.Y;
+                Vector2 nextPos = new Vector2(cell.col + getCellX, cell.row + getCellY);
 
-                double c = centerCoord.Y - centerCoord.X * gradient;
+                int clear = Convert.ToInt16(grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
+                int notClear = Convert.ToInt16(!grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
 
-                double x = centerCoord.X + (1 - centerCoord.X % 1) * left;
-                double y = (x * gradient) + c;
-                while (!wallHit)
+                if (Math.Sign(Math.Tan(angle)) == 1)
                 {
-                    int deltaY = Math.Abs((int)y - (int)lastY);
-
-                    if (deltaY > 0)
-                    {
-                        for (int i = (int)lastY + 1; i < y; i = i + 1 * up)
-                        {
-                            if (!grid.cellArr[(int)(x - 1), (int)(i)].clear)
-                            {
-                                wallHit = true;
-                                y = i;
-                                x = (y - c) / gradient;
-                            }
-                        }
-                    }
-                    if (!grid.cellArr[(int)x, (int)y].clear)
-                    {
-                        wallHit = true;
-                    }
-                    if (!wallHit)
-                    {
-                        x = x + 1 * left;
-                        lastY = y;
-                        y = x * gradient + c;
-                    }
-
+                    nextPos = new Vector2(cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear);
                 }
-                //y = gradient * x + centerCoord.Y;
+                else
+                {
+                    nextPos = new Vector2(cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear);
+                }
 
-                //double deltay = Math.Abs(y - lastY);
+                Vector2 vecToNextPos = nextPos - centerCoord;
 
-                //for (double i = 0; i < deltay; i++)
-                //{
-                //    y = lastY + (1 - lastY % 1) * Math.Sign(Math.Sin(rad));
+                Vector2 normalVec = Vector2.Normalize(vecToNextPos);
+                angle = Math.Acos(Vector2.Dot(normalVec, new Vector2(1, 0)));
 
-                //    if (!grid.cellArr[(int)x, (int)y].clear)
-                //    {
-                //        wallHit = true;
-                //        lastY = y;
-                //    }
-                //}
+                Ray ray = Ray.castRay(grid, centerCoord, angle);
 
-
-                //if (!grid.cellArr[(int)x, (int)y].clear)
-                //{
-                //    wallHit = true;
-                //    x = x - 1 * Math.Sign(Math.Cos(rad));
-                //}
-
-                //x = x + 1* Math.Sign(Math.Cos(rad));
+                Ray roundedRay = new Ray(ray.startPos, new Vector2((float)Math.Round(ray.endPos.X, 3), (float)Math.Round(ray.endPos.Y, 3)), angle);
 
 
-                Pen p = new Pen(Color.Black);
-                p.Width = 3;
-                Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-                e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((x - topLeft.X) * boxSize), (int)((y - topLeft.Y) * boxSize)));
+                if (roundedRay.endPos != nextPos)
+                {
+                    Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
+                    nextPos = new Vector2(hitCell.col, hitCell.row);
+                }
             }
+
+
+            //for (double rad = 0; rad <= 2*Math.PI; rad = rad + 0.05)
+            //{
+            //    Ray ray = Ray.castRay(grid, centerCoord, rad);
+
+            //    Pen p = new Pen(Color.Black);
+            //    p.Width = 3;
+            //    Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            //    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((ray.endPos.X - topLeft.X) * boxSize), (int)((ray.endPos.Y - topLeft.Y) * boxSize)));
+            //}
         }
     }
 }
