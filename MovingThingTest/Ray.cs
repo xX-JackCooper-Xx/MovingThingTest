@@ -135,5 +135,11 @@ namespace MovingThingTest
 
             return new Cell();
         }
+
+        public static Ray roundRay(Ray ray, int i)
+        {
+            Ray ray2 = new Ray(ray.startPos, new Vector2((int)Math.Round(ray.endPos.X,i), (int)Math.Round(ray.endPos.Y,i)), ray.angle);   
+            return ray2;
+        }
     }
 }

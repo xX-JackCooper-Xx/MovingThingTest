@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -255,52 +256,55 @@ namespace MovingThingTest
 
         public void vision(Grid grid, PaintEventArgs e)
         {
-            double angle = 0;
+            //while (angle < 3*Math.PI/4-0.5)
+            //{
+            //    int signSin = Math.Sign(Math.Sin(angle));
+            //    int signCos = Math.Sign(Math.Cos(angle));
+
+            //    int getCellX = (-1 * signSin - 1) / 2;
+            //    int getCellY = (signCos - 1) / 2;
+
+            //    nextPos = new Vector2(cell.col + getCellX, cell.row + getCellY);
+
+            //    int clear = Convert.ToInt16(grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
+            //    int notClear = Convert.ToInt16(!grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
+
+            //    if (Math.Sign(Math.Tan(angle)) == 1)
+            //    {
+            //        nextPos = new Vector2(cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear);
+            //    }
+            //    else
+            //    {
+            //        nextPos = new Vector2(cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear);
+            //    }
+
+            //    Vector2 vecToNextPos = nextPos - centerCoord;
+
+            //    Vector2 normalVec = Vector2.Normalize(vecToNextPos);
+            //    angle = Math.Acos(Vector2.Dot(normalVec, new Vector2(1, 0)));
+
+            //    Ray ray = Ray.castRay(grid, centerCoord, angle);
+            //    Ray roundedRay = Ray.roundRay(ray, 0);
 
 
-            while (angle < 2 * Math.PI)
-            {
-                int signSin = Math.Sign(Math.Sin(angle));
-                int signCos = Math.Sign(Math.Cos(angle));
 
-                int getCellX = (-1 * signSin - 1) / 2;
-                int getCellY = (signCos - 1) / 2;
+            //    if (roundedRay.endPos != nextPos)
+            //    {
+            //        Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
+            //        nextPos = new Vector2(hitCell.col, hitCell.row);
+            //    }
 
-                Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
-
-                Vector2 nextPos = new Vector2(cell.col + getCellX, cell.row + getCellY);
-
-                int clear = Convert.ToInt16(grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
-                int notClear = Convert.ToInt16(!grid.cellArr[(int)nextPos.X, (int)nextPos.Y].clear);
-
-                if (Math.Sign(Math.Tan(angle)) == 1)
-                {
-                    nextPos = new Vector2(cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear);
-                }
-                else
-                {
-                    nextPos = new Vector2(cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear);
-                }
-
-                Vector2 vecToNextPos = nextPos - centerCoord;
-
-                Vector2 normalVec = Vector2.Normalize(vecToNextPos);
-                angle = Math.Acos(Vector2.Dot(normalVec, new Vector2(1, 0)));
-
-                Ray ray = Ray.castRay(grid, centerCoord, angle);
-
-                Ray roundedRay = new Ray(ray.startPos, new Vector2((float)Math.Round(ray.endPos.X, 3), (float)Math.Round(ray.endPos.Y, 3)), angle);
+            //    cell = grid.cellArr[(int)roundedRay.endPos.X, (int)roundedRay.endPos.Y];
 
 
-                if (roundedRay.endPos != nextPos)
-                {
-                    Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
-                    nextPos = new Vector2(hitCell.col, hitCell.row);
-                }
-            }
+            //    Pen p = new Pen(Color.Black);
+            //    p.Width = 3;
+            //    Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            //    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((ray.endPos.X - topLeft.X) * boxSize), (int)((ray.endPos.Y - topLeft.Y) * boxSize)));
+            //}
 
 
-            //for (double rad = 0; rad <= 2*Math.PI; rad = rad + 0.05)
+            //for (double rad = 0; rad <= 2 * Math.PI; rad = rad + 0.05)
             //{
             //    Ray ray = Ray.castRay(grid, centerCoord, rad);
 
@@ -309,6 +313,47 @@ namespace MovingThingTest
             //    Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
             //    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((ray.endPos.X - topLeft.X) * boxSize), (int)((ray.endPos.Y - topLeft.Y) * boxSize)));
             //}
+
+            double angle = 0;
+
+            Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
+
+            while (angle < Math.PI)
+            {
+                int signSin = Math.Sign(Math.Sin(angle));
+                int signCos = Math.Sign(Math.Cos(angle));
+
+                int getCellX = (-1 * signSin - 1) / 2;
+                int getCellY = (signCos - 1) / 2;
+
+                Vector2 checkCellVector = new Vector2(cell.col + getCellX, cell.row + getCellY);
+
+                int clear = Convert.ToInt16(grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
+                int notClear = Convert.ToInt16(!grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
+
+                if (Math.Sign(Math.Tan(angle)) == 1)
+                {
+                    cell = grid.cellArr[cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear];
+                }
+                else
+                {
+                    cell = grid.cellArr[cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear];
+                }
+
+                Vector2 vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
+
+                Vector2 normal = Vector2.Normalize(vecToNewCell);
+                angle = Math.Acos(Vector2.Dot(normal,new Vector2(1,0)));
+
+                Pen p = new Pen(Color.Black);
+                p.Width = 3;
+                Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+                e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((cell.col - topLeft.X) * boxSize), (int)((cell.row - topLeft.Y) * boxSize)));
+
+
+            }
+
+
         }
     }
 }
