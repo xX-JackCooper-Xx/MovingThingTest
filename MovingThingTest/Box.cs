@@ -315,10 +315,10 @@ namespace MovingThingTest
             //}
 
             double angle = 0;
-
+            bool breakCondition = false;
             Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
 
-            while (angle < Math.PI)
+            while (angle <= 0 || !breakCondition)
             {
                 int signSin = Math.Sign(Math.Sin(angle));
                 int signCos = Math.Sign(Math.Cos(angle));
@@ -343,13 +343,26 @@ namespace MovingThingTest
                 Vector2 vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
 
                 Vector2 normal = Vector2.Normalize(vecToNewCell);
-                angle = Math.Acos(Vector2.Dot(normal,new Vector2(1,0)));
+                Vector2 right = new Vector2(1, 0);
+                double dot = Vector2.Dot(normal, right);
+                double det = normal.X * right.Y - normal.Y * right.X;
+                angle = -Math.Atan2(det, dot);
+
+                Ray checkRay = Ray.castRay(grid, centerCoord, angle);
+                if(checkRay.endPos.X != cell.col && checkRay.endPos.Y != cell.row)
+                {
+                }
+
 
                 Pen p = new Pen(Color.Black);
                 p.Width = 3;
                 Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
                 e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((cell.col - topLeft.X) * boxSize), (int)((cell.row - topLeft.Y) * boxSize)));
-
+                
+                if(angle < 0)
+                {
+                    breakCondition = true;
+                }
 
             }
 
