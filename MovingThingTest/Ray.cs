@@ -12,17 +12,20 @@ namespace MovingThingTest
         public Vector2 startPos;
         public Vector2 endPos;
         public double angle;
+        public double magnitude;
 
         public Ray()
         {
             startPos = new Vector2(0,0);
             endPos = new Vector2(0,0);
             angle = 0;
+            this.magnitude = 0;
         }
         public Ray(Vector2 startPos, Vector2 endPos, double angle) { 
             this.startPos = startPos;
             this.endPos = endPos;
             this.angle = angle;
+            this.magnitude = Math.Sqrt((endPos.X - startPos.X) * (endPos.X - startPos.X) + (endPos.Y - startPos.Y) * (endPos.Y - startPos.Y));
         }
 
         public static Ray castRay(Grid grid, Vector2 startCoord, double angle)

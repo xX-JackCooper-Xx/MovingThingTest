@@ -321,9 +321,11 @@ namespace MovingThingTest
             Cell tempCell;
             Pen p = new Pen(Color.Black, 3);
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-
+            Vector2 vecToNewCell;
+            bool ignoreHit = false;
             while (angle <= 0 || !breakCondition)
             {
+                ignoreHit = false;
                 int signSin = Math.Sign(Math.Sin(angle));
                 int signCos = Math.Sign(Math.Cos(angle));
 
@@ -332,35 +334,54 @@ namespace MovingThingTest
 
                 Vector2 checkCellVector = new Vector2(cell.col + getCellX, cell.row + getCellY);
 
+                p.Color = Color.White;
+                Cell checkCell = grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y];
+                RectangleF CheckRect = new RectangleF((checkCell.col - topLeft.X) * boxSize, (checkCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+                e.Graphics.DrawRectangles(p, new[] { CheckRect });
+
                 int clear = Convert.ToInt16(grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
                 int notClear = Convert.ToInt16(!grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
 
+
+
                 if (Math.Sign(Math.Tan(angle)) == 1)
                 {
-                    tempCell = grid.cellArr[cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear];
+                    p.Width = 5;
+                    p.Color = Color.Yellow;
+                    tempCell = grid.cellArr[cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear]; // bottom right and top left
+                    if(angle > 0 && tempCell.clear)
+                    {
+                        vecToNewCell = new Vector2(tempCell.col - centerCoord.X, tempCell.row - centerCoord.Y);
+                        angle = getAngle(vecToNewCell);
+                        Ray corretingRay = Ray.castRay(grid, new Vector2(tempCell.col, tempCell.row), angle); // so profesiontal
+                        
+                        e.Graphics.DrawLine(p, new Point((int)((corretingRay.startPos.X - topLeft.X) * boxSize), (int)((corretingRay.startPos.Y - topLeft.Y) * boxSize)), new Point((int)((corretingRay.endPos.X - topLeft.X) * boxSize), (int)((corretingRay.endPos.Y - topLeft.Y) * boxSize)));
+                        tempCell = Ray.getCellFromRaycast(grid, new Vector2(tempCell.col, tempCell.row), angle);
+                        ignoreHit = true;
+                    }
+                    if (Math.Sign(angle) == -1 && grid.cellArr[tempCell.col - 1, tempCell.row].clear)
+                    {
+                        RectangleF rect = new RectangleF((tempCell.col - topLeft.X) * boxSize, (tempCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+                        e.Graphics.DrawRectangles(p, new[] { rect });
+                    }
                 }
                 else
                 {
+
                     tempCell = grid.cellArr[cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear];
+// bottom left and top right
                 }
 
-                if (tempCell.clear)
-                {
-                    p.Color = Color.Blue;
-                    p.Width = 6;
-                    Ray tempRay = Ray.castRay(grid, new Vector2(tempCell.col, tempCell.row), angle);
-                    e.Graphics.DrawLine(p, new Point((int)((tempRay.startPos.X - topLeft.X) * boxSize), (int)((tempRay.startPos.Y - topLeft.Y) * boxSize)), new Point((int)((tempRay.endPos.X - topLeft.X) * boxSize), (int)((tempRay.endPos.Y - topLeft.Y) * boxSize)));
 
-                }
 
                 cell = tempCell;
 
-                Vector2 vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
+                vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
 
                 angle = getAngle(vecToNewCell);
 
                 Ray checkRay = Ray.castRay(grid, centerCoord, angle);
-                if (checkRay.endPos.X != cell.col && checkRay.endPos.Y != cell.row)
+                if (checkRay.endPos.X != cell.col && checkRay.endPos.Y != cell.row && !ignoreHit)
                 {
                     Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
                     //Cell cell2 = grid.cellArr[hitCell.col + getCellX, hitCell.row + getCellY];
