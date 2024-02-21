@@ -357,8 +357,7 @@ namespace MovingThingTest
                         
                         e.Graphics.DrawLine(p, new Point((int)((corretingRay.startPos.X - topLeft.X) * boxSize), (int)((corretingRay.startPos.Y - topLeft.Y) * boxSize)), new Point((int)((corretingRay.endPos.X - topLeft.X) * boxSize), (int)((corretingRay.endPos.Y - topLeft.Y) * boxSize)));
                         tempCell = Ray.getCellFromRaycast(grid, new Vector2(tempCell.col, tempCell.row), angle);
-                        tempCell = grid.cellArr[(int)corretingRay.endPos.X, (int)corretingRay.endPos.Y +1];
-                        
+                        ignoreHit = true;
                     }
                     if (Math.Sign(angle) == -1 && grid.cellArr[tempCell.col - 1, tempCell.row].clear)
                     {
