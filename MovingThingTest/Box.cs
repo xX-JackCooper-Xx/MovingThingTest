@@ -315,102 +315,134 @@ namespace MovingThingTest
             //    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((ray.endPos.X - topLeft.X) * boxSize), (int)((ray.endPos.Y - topLeft.Y) * boxSize)));
             //}
 
-            double angle = 0;
+//            double angle = 0;
+//            bool breakCondition = false;
+//            Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
+//            Cell tempCell;
+//            Pen p = new Pen(Color.Black, 3);
+//            Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+//            Vector2 vecToNewCell;
+//            bool ignoreHit = false;
+//            while (angle <= 0 || !breakCondition)
+//            {
+//                ignoreHit = false;
+//                int signSin = Math.Sign(Math.Sin(angle));
+//                int signCos = Math.Sign(Math.Cos(angle));
+
+//                int getCellX = (-1 * signSin - 1) / 2;
+//                int getCellY = (signCos - 1) / 2;
+
+//                Vector2 checkCellVector = new Vector2(cell.col + getCellX, cell.row + getCellY);
+
+//                p.Color = Color.White;
+//                Cell checkCell = grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y];
+//                RectangleF CheckRect = new RectangleF((checkCell.col - topLeft.X) * boxSize, (checkCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+//                e.Graphics.DrawRectangles(p, new[] { CheckRect });
+
+//                int clear = Convert.ToInt16(grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
+//                int notClear = Convert.ToInt16(!grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
+
+
+
+//                if (Math.Sign(Math.Tan(angle)) == 1)
+//                {
+//                    p.Width = 5;
+//                    p.Color = Color.Yellow;
+//                    tempCell = grid.cellArr[cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear]; // bottom right and top left
+//                    if(angle > 0 && tempCell.clear)
+//                    {
+//                        vecToNewCell = new Vector2(tempCell.col - centerCoord.X, tempCell.row - centerCoord.Y);
+//                        angle = getAngle(vecToNewCell);
+//                        Ray corretingRay = Ray.castRay(grid, new Vector2(tempCell.col, tempCell.row), angle); // so profesiontal
+                        
+//                        e.Graphics.DrawLine(p, new Point((int)((corretingRay.startPos.X - topLeft.X) * boxSize), (int)((corretingRay.startPos.Y - topLeft.Y) * boxSize)), new Point((int)((corretingRay.endPos.X - topLeft.X) * boxSize), (int)((corretingRay.endPos.Y - topLeft.Y) * boxSize)));
+//                        tempCell = Ray.getCellFromRaycast(grid, new Vector2(tempCell.col, tempCell.row), angle);
+//                        ignoreHit = true;
+//                    }
+//                    if (Math.Sign(angle) == -1 && grid.cellArr[tempCell.col - 1, tempCell.row].clear)
+//                    {
+//                        RectangleF rect = new RectangleF((tempCell.col - topLeft.X) * boxSize, (tempCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+//                        e.Graphics.DrawRectangles(p, new[] { rect });
+//                    }
+//                }
+//                else
+//                {
+
+//                    tempCell = grid.cellArr[cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear];
+//// bottom left and top right
+//                }
+
+
+
+//                cell = tempCell;
+
+//                vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
+
+//                angle = getAngle(vecToNewCell);
+
+//                Ray checkRay = Ray.castRay(grid, centerCoord, angle);
+//                if (checkRay.endPos.X != cell.col && checkRay.endPos.Y != cell.row && !ignoreHit)
+//                {
+//                    Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
+//                    //Cell cell2 = grid.cellArr[hitCell.col + getCellX, hitCell.row + getCellY];
+
+
+
+//                    p.Width = 5;
+//                    p.Color = Color.Red;
+//                    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((checkRay.endPos.X - topLeft.X) * boxSize), (int)((checkRay.endPos.Y - topLeft.Y) * boxSize)));
+
+//                    //RectangleF rect3 = new RectangleF((cell2.col - topLeft.X) * boxSize, (cell2.row - topLeft.Y) * boxSize, boxSize, boxSize);
+//                    RectangleF rect = new RectangleF((hitCell.col - topLeft.X) * boxSize, (hitCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+//                    e.Graphics.DrawRectangles(p, new[] { rect});
+//                }
+
+//                p.Width = 3;
+//                p.Color = Color.Black;
+
+
+//                e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((cell.col - topLeft.X) * boxSize), (int)((cell.row - topLeft.Y) * boxSize)));
+//                RectangleF rect2 = new RectangleF((cell.col - topLeft.X) * boxSize, (cell.row - topLeft.Y) * boxSize, boxSize, boxSize);
+//                e.Graphics.DrawRectangles(p, new[] { rect2 });
+//                if (angle < 0)
+//                {
+//                    breakCondition = true;
+//                }
+
+//            }
+
+            double angle = 2;
             bool breakCondition = false;
             Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
             Cell tempCell;
             Pen p = new Pen(Color.Black, 3);
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-            Vector2 vecToNewCell;
+            Vector2 currentPoint;
             bool ignoreHit = false;
             while (angle <= 0 || !breakCondition)
             {
-                ignoreHit = false;
                 int signSin = Math.Sign(Math.Sin(angle));
+                int signSin2 = (-signSin + 1) / 2;
+
                 int signCos = Math.Sign(Math.Cos(angle));
+                int signCos2 = (signCos + 1) / 2;
+                currentPoint = Ray.castRay(grid, centerCoord, angle).endPos;
 
-                int getCellX = (-1 * signSin - 1) / 2;
-                int getCellY = (signCos - 1) / 2;
-
-                Vector2 checkCellVector = new Vector2(cell.col + getCellX, cell.row + getCellY);
-
-                p.Color = Color.White;
-                Cell checkCell = grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y];
-                RectangleF CheckRect = new RectangleF((checkCell.col - topLeft.X) * boxSize, (checkCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
-                e.Graphics.DrawRectangles(p, new[] { CheckRect });
-
-                int clear = Convert.ToInt16(grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
-                int notClear = Convert.ToInt16(!grid.cellArr[(int)checkCellVector.X, (int)checkCellVector.Y].clear);
-
-
-
-                if (Math.Sign(Math.Tan(angle)) == 1)
-                {
-                    p.Width = 5;
-                    p.Color = Color.Yellow;
-                    tempCell = grid.cellArr[cell.col - 1 * signSin * notClear, cell.row + 1 * signCos * clear]; // bottom right and top left
-                    if(angle > 0 && tempCell.clear)
-                    {
-                        vecToNewCell = new Vector2(tempCell.col - centerCoord.X, tempCell.row - centerCoord.Y);
-                        angle = getAngle(vecToNewCell);
-                        Ray corretingRay = Ray.castRay(grid, new Vector2(tempCell.col, tempCell.row), angle); // so profesiontal
-                        
-                        e.Graphics.DrawLine(p, new Point((int)((corretingRay.startPos.X - topLeft.X) * boxSize), (int)((corretingRay.startPos.Y - topLeft.Y) * boxSize)), new Point((int)((corretingRay.endPos.X - topLeft.X) * boxSize), (int)((corretingRay.endPos.Y - topLeft.Y) * boxSize)));
-                        tempCell = Ray.getCellFromRaycast(grid, new Vector2(tempCell.col, tempCell.row), angle);
-                        ignoreHit = true;
-                    }
-                    if (Math.Sign(angle) == -1 && grid.cellArr[tempCell.col - 1, tempCell.row].clear)
-                    {
-                        RectangleF rect = new RectangleF((tempCell.col - topLeft.X) * boxSize, (tempCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
-                        e.Graphics.DrawRectangles(p, new[] { rect });
-                    }
+                if(currentPoint.X % 1 != 0) {
+                    currentPoint.X = (int)currentPoint.X + signSin2;
                 }
-                else
+                if(currentPoint.Y % 1 != 0)
                 {
-
-                    tempCell = grid.cellArr[cell.col - 1 * signSin * clear, cell.row + 1 * signCos * notClear];
-// bottom left and top right
+                    currentPoint.Y = (int)currentPoint.Y + signCos2;
                 }
 
 
-
-                cell = tempCell;
-
-                vecToNewCell = new Vector2(cell.col - centerCoord.X, cell.row - centerCoord.Y);
-
-                angle = getAngle(vecToNewCell);
-
-                Ray checkRay = Ray.castRay(grid, centerCoord, angle);
-                if (checkRay.endPos.X != cell.col && checkRay.endPos.Y != cell.row && !ignoreHit)
-                {
-                    Cell hitCell = Ray.getCellFromRaycast(grid, centerCoord, angle);
-                    //Cell cell2 = grid.cellArr[hitCell.col + getCellX, hitCell.row + getCellY];
-
-
-
-                    p.Width = 5;
-                    p.Color = Color.Red;
-                    e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((checkRay.endPos.X - topLeft.X) * boxSize), (int)((checkRay.endPos.Y - topLeft.Y) * boxSize)));
-
-                    //RectangleF rect3 = new RectangleF((cell2.col - topLeft.X) * boxSize, (cell2.row - topLeft.Y) * boxSize, boxSize, boxSize);
-                    RectangleF rect = new RectangleF((hitCell.col - topLeft.X) * boxSize, (hitCell.row - topLeft.Y) * boxSize, boxSize, boxSize);
-                    e.Graphics.DrawRectangles(p, new[] { rect});
-                }
-
-                p.Width = 3;
-                p.Color = Color.Black;
-
-
-                e.Graphics.DrawLine(p, new Point((int)((centerCoord.X - topLeft.X) * boxSize), (int)((centerCoord.Y - topLeft.Y) * boxSize)), new Point((int)((cell.col - topLeft.X) * boxSize), (int)((cell.row - topLeft.Y) * boxSize)));
-                RectangleF rect2 = new RectangleF((cell.col - topLeft.X) * boxSize, (cell.row - topLeft.Y) * boxSize, boxSize, boxSize);
-                e.Graphics.DrawRectangles(p, new[] { rect2 });
                 if (angle < 0)
                 {
                     breakCondition = true;
                 }
 
             }
-
 
         }
 
