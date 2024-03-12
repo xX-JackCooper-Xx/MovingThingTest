@@ -411,7 +411,7 @@ namespace MovingThingTest
 
 //            }
 
-            double angle = 2;
+            double angle = 0;
             bool breakCondition = false;
             Cell cell = Ray.getCellFromRaycast(grid, centerCoord, angle);
             Cell tempCell;
@@ -426,14 +426,31 @@ namespace MovingThingTest
 
                 int signCos = Math.Sign(Math.Cos(angle));
                 int signCos2 = (signCos + 1) / 2;
-                currentPoint = Ray.castRay(grid, centerCoord, angle).endPos;
 
-                if(currentPoint.X % 1 != 0) {
-                    currentPoint.X = (int)currentPoint.X + signSin2;
+                currentPoint = Ray.castRay(grid, centerCoord, angle).endPos;
+                currentPoint = roundedVec(currentPoint, angle);
+
+                angle = getAngle(currentPoint);
+
+                Ray checkRay = Ray.castRay(grid, centerCoord, angle);
+
+                if(checkRay.endPos != currentPoint) { 
+
                 }
-                if(currentPoint.Y % 1 != 0)
+
+                Vector2 checkCellVector1 = new Vector2((-signSin - 1) / 2, (signCos - 1) / 2);
+                Vector2 yomp = currentPoint + checkCellVector1;
+
+                Vector2 checkCellVector2 = new Vector2((signCos - 1) / 2, (signSin - 1) / 2);
+                Vector2 yelp = currentPoint + checkCellVector2;
+
+                if (!grid.cellArr[(int)yomp.X, (int)yomp.Y].clear)
                 {
-                    currentPoint.Y = (int)currentPoint.Y + signCos2;
+
+                }
+                else if (!grid.cellArr[(int)yelp.X, (int)yelp.Y].clear)
+                {
+
                 }
 
 
@@ -444,6 +461,24 @@ namespace MovingThingTest
 
             }
 
+        }
+
+        public Vector2 roundedVec(Vector2 vec, double angle)
+        {
+            int signSin = Math.Sign(Math.Sin(angle));
+            int signSin2 = (-signSin + 1) / 2;
+
+            int signCos = Math.Sign(Math.Cos(angle));
+            int signCos2 = (signCos + 1) / 2;
+            if (vec.X % 1 != 0)
+            {
+                vec.X = (int)vec.X + signSin2;
+            }
+            if (vec.Y % 1 != 0)
+            {
+                vec.Y = (int)vec.Y + signCos2;
+            }
+            return vec;
         }
 
         public double getAngle(Vector2 vec)

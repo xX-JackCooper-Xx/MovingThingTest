@@ -23,10 +23,10 @@ namespace MovingThingTest
         public Form1()
         {
             InitializeComponent();
-            FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Maximized;
+            //FormBorderStyle = FormBorderStyle.None;
+            //WindowState = FormWindowState.Maximized;
 
-            grid = new Grid();
+            grid = new Grid(pictureBox1);
             grid.createGrid();
 
             this.box = new Box(grid, grid.cellArr[1, 1].screenPos, grid.cellSize);
@@ -35,7 +35,7 @@ namespace MovingThingTest
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-
+            grid.updateScreenSize(pictureBox1);
             box.UpdatePos(grid, grid.pathStack);
             pictureBox1.Invalidate();
 
@@ -89,7 +89,7 @@ namespace MovingThingTest
             }
             grid.drawGrid(e);
             box.drawBox(e, grid);
-            box.vision(grid, e);
+            //box.vision(grid, e);
             //box.drawVisionCone(grid, e);
             //grid.drawWalls(e);
         }
@@ -151,7 +151,8 @@ namespace MovingThingTest
             if (mode == 2)
             {
                 drag = true;
-                mouseDownGridCoord = new Vector2(e.Location.X, e.Location.Y);
+                Point p = pictureBox1.PointToScreen(e.Location);
+                mouseDownGridCoord = new Vector2(p.X, p.Y);
             }
         }
 
@@ -179,7 +180,7 @@ namespace MovingThingTest
         private void saveFile()
         {
             Save.BackColor = Color.Blue;
-            using (StreamWriter sw = new StreamWriter("C:\\Users\\marko\\Documents\\NEA_File_Save\\saveFile.txt"))
+            using (StreamWriter sw = new StreamWriter("P:\\6th Form Computing\\17ParkinsonM\\NEA-File_Save\\saveFile.txt"))
             {
                 for (int i = 0; i < grid.cols; i++)
                 {
@@ -191,6 +192,11 @@ namespace MovingThingTest
                 }
                 Save.BackColor = Color.Green;
             }
+        }
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            pictureBox1.Width = Width;
+            pictureBox1.Height = Height;
         }
     }
 
