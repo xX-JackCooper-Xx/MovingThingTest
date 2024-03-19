@@ -35,7 +35,7 @@ namespace MovingThingTest
 
         private void opennewform()
         {
-            Application.Run(new Form1());
+            Application.Run(new MapMaker());
         }
     }
 }

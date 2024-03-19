@@ -28,19 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            panel1 = new Panel();
             SuspendLayout();
+            // 
+            // panel1
+            // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.AutoSize = true;
+            panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(500, 451);
+            panel1.TabIndex = 3;
+            panel1.Paint += panel1_Paint;
             // 
             // MapMaker
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 451);
+            Controls.Add(panel1);
             IsMdiContainer = true;
             Name = "MapMaker";
-            Text = "MapMaker";
+            Load += MapMaker_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Panel panel1;
     }
 }

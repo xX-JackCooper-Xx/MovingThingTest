@@ -36,11 +36,11 @@ namespace MovingThingTest
         public List<Cell> dirt = new List<Cell>();
         public List<Cell> glass = new List<Cell>();
 
-        public Grid(PictureBox pb)
+        public Grid(int width, int height)
         {
             
-            this.screenSize.Width = pb.Width;
-            this.screenSize.Height = pb.Height;
+            this.screenSize.Width = width;
+            this.screenSize.Height = height;
             this.rows = 18;
             this.cols = 32;
 
@@ -93,13 +93,13 @@ namespace MovingThingTest
 
         }
         
-        public void updateScreenSize(PictureBox pb)
+        public void updateScreenSize(int width, int height)
         {
-            cameraSize.Y += (pb.Height - screenSize.Height) / cellSize;
-            float screenSizeRatio = (float)pb.Width / (float)pb.Height;
+            cameraSize.Y += (height - screenSize.Height) / cellSize;
+            float screenSizeRatio = (float)width / (float)height;
             cameraSize.X = screenSizeRatio * cameraSize.Y;
-            screenSize.Width = pb.Width;
-            screenSize.Height = pb.Height;
+            screenSize.Width = width;
+            screenSize.Height = height;
 
         }
 

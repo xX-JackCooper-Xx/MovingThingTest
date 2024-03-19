@@ -1,13 +1,17 @@
-using System.Numerics;
-using System.Diagnostics;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
-using System.DirectoryServices.ActiveDirectory;
+using System.Drawing;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MovingThingTest
 {
-    public partial class Form1 : Form
+    public partial class UserControl1 : UserControl
     {
 
         public Box box;
@@ -19,29 +23,29 @@ namespace MovingThingTest
 
         public int mode = 0;
         public int tyle = 0;
-
-        public Form1()
+        public UserControl1()
         {
             InitializeComponent();
-            WindowState = FormWindowState.Maximized;
 
             grid = new Grid(this.Width, this.Height);
             grid.createGrid();
 
             this.box = new Box(grid, grid.cellArr[1, 1].screenPos, grid.cellSize);
+        }
 
+        private void UserControl1_Load(object sender, EventArgs e)
+        {
 
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            grid.updateScreenSize(Width, Height);
+            grid.updateScreenSize(Height, Width);
             box.UpdatePos(grid, grid.pathStack);
-            pictureBox1.Invalidate();
-
-
+            Invalidate();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void UserControl1_Click(object sender, EventArgs e)
         {
             MouseEventArgs me = (MouseEventArgs)e;
             Point clickPos = me.Location;
@@ -72,7 +76,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void UserControl1_Paint(object sender, PaintEventArgs e)
         {
             if (drag)
             {
@@ -93,14 +97,6 @@ namespace MovingThingTest
             //grid.drawWalls(e);
         }
 
-        private void tyleButton_Click(object sender, EventArgs e)
-        {
-            Color[] colours = new Color[] { Color.Gray, Color.Red, Color.Blue };
-            tyle = (tyle + 1) % 3;
-
-            tyleButton.BackColor = colours[tyle];
-        }
-
         private void modeButton_Click(object sender, EventArgs e)
         {
             string[] names = new string[] { "Move", "Place", "Pan" };
@@ -109,12 +105,13 @@ namespace MovingThingTest
             modeButton.Text = names[mode];
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void tyleButton_Click(object sender, EventArgs e)
         {
+            Color[] colours = new Color[] { Color.Gray, Color.Red, Color.Blue };
+            tyle = (tyle + 1) % 3;
 
+            tyleButton.BackColor = colours[tyle];
         }
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -127,48 +124,6 @@ namespace MovingThingTest
                 grid.cameraPosition = box.gridCoord;
                 cameraLock = true;
             }
-        }
-
-        private void zoomOutButton_Click(object sender, EventArgs e)
-        {
-            grid.cameraSize.Y += 2;
-            grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
-            grid.cellSize = grid.calculateCellSize();
-            box.boxSize = grid.cellSize;
-        }
-
-        private void zoomInButton_Click(object sender, EventArgs e)
-        {
-            grid.cameraSize.Y -= 2;
-            grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
-            grid.cellSize = grid.calculateCellSize();
-            box.boxSize = grid.cellSize;
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (mode == 2)
-            {
-                drag = true;
-                Point p = pictureBox1.PointToScreen(e.Location);
-                mouseDownGridCoord = new Vector2(p.X, p.Y);
-            }
-        }
-
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (mode == 2)
-            {
-                drag = false;
-            }
-        }
-
-        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
-        {
-            grid.cameraSize.Y = grid.cameraSize.Y * 1 - e.Delta / 200f;
-            grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
-            grid.cellSize = grid.calculateCellSize();
-            box.boxSize = grid.cellSize;
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -192,17 +147,31 @@ namespace MovingThingTest
                 Save.BackColor = Color.Green;
             }
         }
-        private void Form1_SizeChanged(object sender, EventArgs e)
+
+        private void UserControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            pictureBox1.Width = Width;
-            pictureBox1.Height = Height;
+            if (mode == 2)
+            {
+                drag = true;
+                Point p = PointToScreen(e.Location);
+                mouseDownGridCoord = new Vector2(p.X, p.Y);
+            }
         }
 
-        public void Resize(int width, int height)
+        private void UserControl1_MouseUp(object sender, MouseEventArgs e)
         {
-            this.Size = new Size(width, height);
+            if (mode == 2)
+            {
+                drag = false;
+            }
+        }
+
+        private void UserControl1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            grid.cameraSize.Y = grid.cameraSize.Y * 1 - e.Delta / 200f;
+            grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
+            grid.cellSize = grid.calculateCellSize();
+            box.boxSize = grid.cellSize;
         }
     }
-
-
 }

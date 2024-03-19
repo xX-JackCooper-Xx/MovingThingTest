@@ -27,7 +27,8 @@ namespace MovingThingTest
         public float cellSize;
         public int ID;
         public bool clear;
-
+        Pen pen = new Pen(Color.Black);
+        SolidBrush cellBrush = new SolidBrush(Color.Black);
 
         public Vector2[] neighbours = {
             new Vector2(-1,0),
@@ -51,6 +52,7 @@ namespace MovingThingTest
             gridCoord = new Vector2(col, row);
             ID = 999;
             clear = true;
+            cellBrush.Color = color;
         }
 
 
@@ -67,8 +69,7 @@ namespace MovingThingTest
         public virtual void drawCell(PaintEventArgs e, Vector2 topleft, float cellSize, int i, int j)
         {
             this.cellSize = cellSize;
-            Pen pen = new Pen(Color.Black);
-            SolidBrush cellBrush = new SolidBrush(color);
+            
             //RectangleF rect = new RectangleF((screenPos.X - topleft.X*cellSize), (screenPos.Y-topleft.Y*cellSize), cellSize, cellSize);
             RectangleF rect = new RectangleF((i - topleft.X) * cellSize, (j - topleft.Y) * cellSize, cellSize, cellSize);
             e.Graphics.FillRectangle(cellBrush, rect);

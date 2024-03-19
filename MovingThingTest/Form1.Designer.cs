@@ -48,7 +48,6 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Anchor = AnchorStyles.None;
             pictureBox1.BackColor = Color.Green;
             pictureBox1.Location = new Point(0, 0);
             pictureBox1.Name = "pictureBox1";
@@ -129,7 +128,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(771, 450);
+            ControlBox = false;
             Controls.Add(Save);
             Controls.Add(button1);
             Controls.Add(zoomOutButton);
@@ -138,6 +139,10 @@
             Controls.Add(tyleButton);
             Controls.Add(pictureBox1);
             DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
+            MaximizeBox = false;
+            MdiChildrenMinimizedAnchorBottom = false;
+            MinimizeBox = false;
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
@@ -150,7 +155,7 @@
         #endregion
 
         private System.Windows.Forms.Timer timer1;
-        private PictureBox pictureBox1;
+        public PictureBox pictureBox1;
         private Button tyleButton;
         private Button modeButton;
         private Button zoomInButton;
