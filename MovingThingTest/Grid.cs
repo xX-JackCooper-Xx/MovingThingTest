@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Drawing;
 using System.Diagnostics;
 using System.Threading;
+using Windows.Web.Http.Headers;
 
 namespace MovingThingTest
 {
@@ -95,9 +96,23 @@ namespace MovingThingTest
         
         public void updateScreenSize(int width, int height)
         {
-            cameraSize.Y += (height - screenSize.Height) / cellSize;
-            float screenSizeRatio = (float)width / (float)height;
-            cameraSize.X = screenSizeRatio * cameraSize.Y;
+            //cameraSize.Y += (height - screenSize.Height) / cellSize;
+            //float screenSizeRatio = (float)width / (float)height;
+            //cameraSize.X = screenSizeRatio * cameraSize.Y;
+            //screenSize.Width = width;
+            //screenSize.Height = height;
+
+            float changeWidth = (width - screenSize.Width) / cellSize;
+            float changeHeight = (height - screenSize.Height) / cellSize;
+
+            cameraSize.Y += changeHeight;
+            cameraSize.X += changeWidth;
+
+            cameraPosition.Y += changeHeight / 2f;
+            cameraPosition.X += changeWidth / 2f;
+            cameraRatio = cameraSize.X / cameraSize.Y;
+
+
             screenSize.Width = width;
             screenSize.Height = height;
 

@@ -20,17 +20,10 @@ namespace MovingThingTest
 
         private void MapMaker_Load(object sender, EventArgs e)
         {
-            //Form1 form1 = new Form1();
-            //form1.TopLevel = false;
-            //form1.AutoScroll = true;
-            //form1.Dock = DockStyle.Fill;
-            //panel1.Controls.Add(form1);
-            //form1.Show();
-
-            UserControl1 uc = new UserControl1();
-            uc.AutoScroll= true;
+            MapMakerControl uc = new MapMakerControl();
+            uc.AutoScroll = true;
             uc.Dock = DockStyle.Fill;
-            panel1.Controls.Add(uc);
+            mapPanel.Controls.Add(uc);
             uc.Show();
         }
 

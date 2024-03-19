@@ -28,26 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
+            mapPanel = new Panel();
+            controlsPanel = new Panel();
             SuspendLayout();
             // 
-            // panel1
+            // mapPanel
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel1.AutoSize = true;
-            panel1.Location = new Point(0, 0);
-            panel1.Margin = new Padding(0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(500, 451);
-            panel1.TabIndex = 3;
-            panel1.Paint += panel1_Paint;
+            mapPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            mapPanel.AutoSize = true;
+            mapPanel.BackColor = Color.Green;
+            mapPanel.Location = new Point(0, 0);
+            mapPanel.Margin = new Padding(0);
+            mapPanel.Name = "mapPanel";
+            mapPanel.Size = new Size(500, 450);
+            mapPanel.TabIndex = 3;
+            mapPanel.Paint += panel1_Paint;
+            // 
+            // controlsPanel
+            // 
+            controlsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            controlsPanel.Location = new Point(500, 0);
+            controlsPanel.Margin = new Padding(0);
+            controlsPanel.Name = "controlsPanel";
+            controlsPanel.Size = new Size(300, 450);
+            controlsPanel.TabIndex = 5;
             // 
             // MapMaker
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 451);
-            Controls.Add(panel1);
+            Controls.Add(controlsPanel);
+            Controls.Add(mapPanel);
             IsMdiContainer = true;
             Name = "MapMaker";
             Load += MapMaker_Load;
@@ -57,6 +69,7 @@
 
         #endregion
 
-        private Panel panel1;
+        private Panel mapPanel;
+        private Panel controlsPanel;
     }
 }

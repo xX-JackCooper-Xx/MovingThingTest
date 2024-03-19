@@ -11,21 +11,19 @@ using System.Windows.Forms;
 
 namespace MovingThingTest
 {
-    public partial class UserControl1 : UserControl
+    public partial class MapMakerControl : UserControl
     {
 
         public Box box;
         public Grid grid;
         public bool cameraLock = false;
 
-
-
         public bool drag = false;
         public Vector2 mouseDownGridCoord;
 
         public int mode = 0;
         public int tyle = 0;
-        public UserControl1()
+        public MapMakerControl()
         {
             InitializeComponent();
 

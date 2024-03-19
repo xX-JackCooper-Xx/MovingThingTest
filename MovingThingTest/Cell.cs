@@ -27,8 +27,8 @@ namespace MovingThingTest
         public float cellSize;
         public int ID;
         public bool clear;
-        Pen pen = new Pen(Color.Black);
-        SolidBrush cellBrush = new SolidBrush(Color.Black);
+        public Pen pen = new Pen(Color.Black);
+        public SolidBrush cellBrush = new SolidBrush(Color.Black);
 
         public Vector2[] neighbours = {
             new Vector2(-1,0),
@@ -127,6 +127,7 @@ namespace MovingThingTest
             clear = false;
             permeable = 0;
             color = Color.Gray;
+            cellBrush.Color = color;
             ID = 0;
         }
         
@@ -138,6 +139,7 @@ namespace MovingThingTest
         {
             permeable = 1;
             color = Color.Green;
+            cellBrush.Color = color;
             ID = 1;
         }
     }
@@ -148,6 +150,7 @@ namespace MovingThingTest
         {
             permeable = 0.25f;
             color = Color.Brown;
+            cellBrush.Color = color;
             ID = 2;
         }
     }
@@ -159,6 +162,7 @@ namespace MovingThingTest
             clear = false;
             permeable = 0;
             color = Color.Gray;
+            cellBrush.Color = color;
             ID = 3;
         }
     }
@@ -168,6 +172,7 @@ namespace MovingThingTest
         {
             permeable = 0;
             color = Color.Green;
+            cellBrush.Color = color;
             ID = 4;
         }
 

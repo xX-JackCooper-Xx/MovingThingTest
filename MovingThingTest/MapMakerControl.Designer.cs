@@ -1,6 +1,6 @@
 ﻿namespace MovingThingTest
 {
-    partial class UserControl1
+    partial class MapMakerControl
     {
         /// <summary> 
         /// Required designer variable.
