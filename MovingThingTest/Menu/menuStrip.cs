@@ -13,7 +13,7 @@ namespace MovingThingTest.Menu
         private List<string> items = new List<string>();
         private List<Color> colours = new List<Color>();
         public bool open = false;
-        private int padding = 5;
+        private int padding = 20;
 
         public Pen pen = new Pen(Color.Black, 3);
         public SolidBrush brush = new SolidBrush(Color.Black);
@@ -32,6 +32,7 @@ namespace MovingThingTest.Menu
         public void drawMenu(PaintEventArgs e, int width, int topLeft, int imageSize, Font font)
         {
             brush.Color = Color.Black;
+            pen.Width = 3;
             font = new Font(font.Name, 20, FontStyle.Bold);
             if(open)
             {
@@ -45,12 +46,14 @@ namespace MovingThingTest.Menu
 
                 int cols = width / (imageSize+padding);
 
+                int xPad = (width - (cols * imageSize + padding * (cols - 1)))/2;
+
                 for(int i = 0; i < items.Count; i++)
                 {
                     int col = i / cols;
                     int row = i % cols;
                     brush.Color = colours[i];
-                    Rectangle rect = new Rectangle(row * (imageSize + padding) + 20, col * (imageSize + padding) + 40, imageSize, imageSize);
+                    Rectangle rect = new Rectangle(row * (imageSize + padding) + xPad, col * (imageSize + padding) + topLeft + 40, imageSize, imageSize);
                     e.Graphics.DrawRectangle(pen, rect);
                     e.Graphics.FillRectangle(brush, rect);
                 }
@@ -74,15 +77,95 @@ namespace MovingThingTest.Menu
 
         public int calculateSize(int width, int imageSize)
         {
-            imageSize = imageSize + padding;
-            int cols = width / imageSize;
-            float height = (float)items.Count / cols;
-            return (int)Math.Ceiling(height*imageSize);
+            if (open)
+            {
+                imageSize = imageSize + padding;
+                int cols = width / imageSize;
+                float height = (float)items.Count / cols;
+                return (int)Math.Ceiling(height)*imageSize;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public void changeOpen()
         {
             open = !open;
+        }
+
+        public int selectItem(Point clickPos, int size, int width, int imageSize)
+        {
+            bool selectX = false;
+            bool selectY = false;
+
+            clickPos.Y -= size;
+
+            int cols = width / (imageSize + padding);
+
+            int rows = (int)Math.Ceiling((float)items.Count / cols);
+
+            int xPad = (width - (cols * imageSize + padding * (cols - 1))) / 2;
+
+            int xPos = xPad;
+            int yPos = 0;
+
+            int col = 0;
+            int row = 0;
+
+            for (int i = 0; i < cols; i++)
+            {
+                if (xPad > clickPos.X)
+                {
+                    break;
+                }
+                xPos += imageSize;
+                if(xPos > clickPos.X)
+                {
+                    col = i;
+                    selectX = true;
+                    break;
+                }
+                else
+                {
+                    xPos += padding;
+                }
+                if(xPos > clickPos.X)
+                {
+                    break;
+                }
+            }
+
+
+            for(int j = 0; j < rows; j++)
+            {
+                yPos += imageSize;
+                if(yPos > clickPos.Y)
+                {
+                    row = j;
+                    selectY = true;
+                    break;
+                }
+                else
+                {
+                    yPos += padding;
+                }
+                if (yPos > clickPos.Y)
+                {
+                    break;
+                }
+            }
+
+            if(selectX && selectY)
+            {
+                return (row * cols + col);
+            }
+            else
+            {
+                return -1;
+            }
+
         }
     }
 }

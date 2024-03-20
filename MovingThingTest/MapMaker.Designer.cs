@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             mapPanel = new Panel();
             controlsPanel = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // mapPanel
@@ -54,6 +56,12 @@
             controlsPanel.TabIndex = 5;
             controlsPanel.Paint += controlsPanel_Paint;
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 50;
+            timer1.Tick += timer1_Tick;
+            // 
             // MapMaker
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -72,5 +80,6 @@
 
         private Panel mapPanel;
         private Panel controlsPanel;
+        private System.Windows.Forms.Timer timer1;
     }
 }
