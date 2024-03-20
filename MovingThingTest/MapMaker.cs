@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovingThingTest.Menu;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,9 +26,20 @@ namespace MovingThingTest
             uc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(uc);
             uc.Show();
+
+            MenuSelector ms = new MenuSelector();
+            ms.AutoScroll = true;
+            ms.Dock = DockStyle.Fill;
+            controlsPanel.Controls.Add(ms);
+            ms.Show();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void controlsPanel_Paint(object sender, PaintEventArgs e)
         {
 
         }

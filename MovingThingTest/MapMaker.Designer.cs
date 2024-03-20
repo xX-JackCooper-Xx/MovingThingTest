@@ -52,6 +52,7 @@
             controlsPanel.Name = "controlsPanel";
             controlsPanel.Size = new Size(300, 450);
             controlsPanel.TabIndex = 5;
+            controlsPanel.Paint += controlsPanel_Paint;
             // 
             // MapMaker
             // 
