@@ -17,6 +17,7 @@ namespace MovingThingTest
         public Box box;
         public Grid grid;
         public bool cameraLock = false;
+        public dynamic item;
 
         public bool drag = false;
         public Vector2 mouseDownGridCoord;

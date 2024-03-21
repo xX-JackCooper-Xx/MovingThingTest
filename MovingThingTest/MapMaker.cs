@@ -16,6 +16,7 @@ namespace MovingThingTest
 
         public dynamic item;
         MenuSelector ms = new MenuSelector();
+        MapMakerControl uc = new MapMakerControl();
         public MapMaker()
         {
             InitializeComponent();
@@ -24,7 +25,7 @@ namespace MovingThingTest
 
         private void MapMaker_Load(object sender, EventArgs e)
         {
-            MapMakerControl uc = new MapMakerControl();
+            
             uc.AutoScroll = true;
             uc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(uc);
@@ -50,6 +51,7 @@ namespace MovingThingTest
         private void timer1_Tick(object sender, EventArgs e)
         {
             item = ms.selectedItem;
+            uc.item = item;
         }
     }
 }
