@@ -72,6 +72,9 @@
             IsMdiContainer = true;
             Name = "MapMaker";
             Load += MapMaker_Load;
+            KeyDown += MapMaker_KeyDown;
+            KeyPress += MapMaker_KeyPress;
+            KeyUp += MapMaker_KeyUp;
             ResumeLayout(false);
             PerformLayout();
         }

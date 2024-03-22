@@ -56,6 +56,9 @@ namespace MovingThingTest.Menu
                     Rectangle rect = new Rectangle(row * (imageSize + padding) + xPad, col * (imageSize + padding) + topLeft + 40, imageSize, imageSize);
                     e.Graphics.DrawRectangle(pen, rect);
                     e.Graphics.FillRectangle(brush, rect);
+                    brush.Color = Color.Black;
+                    font = new Font(font.Name, 15, FontStyle.Regular);
+                    e.Graphics.DrawString(items[i], font, brush, new PointF(row * (imageSize + padding) + xPad, col * (imageSize + padding) + topLeft + 40));
                 }
                 
             }

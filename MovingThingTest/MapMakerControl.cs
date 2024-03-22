@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -13,25 +14,23 @@ namespace MovingThingTest
 {
     public partial class MapMakerControl : UserControl
     {
-
-        public Box box;
         public Grid grid;
-        public bool cameraLock = false;
-        public dynamic item;
+        public Type item = typeof(Grass);
 
         public bool drag = false;
+        public bool place = false;
         public Vector2 mouseDownGridCoord;
 
         public int mode = 0;
         public int tyle = 0;
+
+        public List<Vector2> placingVecs = new List<Vector2>();
         public MapMakerControl()
         {
             InitializeComponent();
 
             grid = new Grid(this.Width, this.Height);
             grid.createGrid();
-
-            this.box = new Box(grid, grid.cellArr[1, 1].screenPos, grid.cellSize);
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -42,68 +41,15 @@ namespace MovingThingTest
         private void timer1_Tick(object sender, EventArgs e)
         {
             grid.updateScreenSize(Width, Height);
-            box.UpdatePos(grid, grid.pathStack);
             pictureBox1.Invalidate();
-        }
-
-        private void UserControl1_Click(object sender, EventArgs e)
-        {
-            MouseEventArgs me = (MouseEventArgs)e;
-            Point clickPos = me.Location;
-            Cell targetCell;
-            Vector2 targetGridCoord = grid.getCellCoordFromPoint(clickPos);
-            if (targetGridCoord.X >= 0 && targetGridCoord.Y >= 0 && targetGridCoord.X < grid.cols && targetGridCoord.Y < grid.rows)
-            {
-                targetCell = grid.cellArr[(int)targetGridCoord.X, (int)targetGridCoord.Y];
-                if (targetCell is not Border && box.currentCell != targetCell)
-                {
-                    switch (mode)
-                    {
-                        case 0:
-                            grid.resetPathFind();
-                            if (targetCell.permeable != 0)
-                            {
-                                grid.PathFind(grid, box.currentCell, targetCell);
-                                //grid.ColourPath();
-                            }
-                            break;
-                        case 1:
-                            grid.placeTyle(targetCell, tyle);
-                            break;
-                        case 2:
-                            break;
-                    }
-                }
-            }
         }
 
         private void modeButton_Click(object sender, EventArgs e)
         {
-            string[] names = new string[] { "Move", "Place", "Pan" };
-            mode = (mode + 1) % 3;
+            string[] names = new string[] { "Place", "Pan" };
+            mode = (mode + 1) % 2;
 
             modeButton.Text = names[mode];
-        }
-
-        private void tyleButton_Click(object sender, EventArgs e)
-        {
-            Color[] colours = new Color[] { Color.Gray, Color.Red, Color.Blue };
-            tyle = (tyle + 1) % 3;
-
-            tyleButton.BackColor = colours[tyle];
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (cameraLock)
-            {
-                cameraLock = false;
-            }
-            else
-            {
-                grid.cameraPosition = box.gridCoord;
-                cameraLock = true;
-            }
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -130,20 +76,28 @@ namespace MovingThingTest
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            Vector2 mouseMove = new Vector2((MousePosition.X - mouseDownGridCoord.X) / grid.cellSize, (MousePosition.Y - mouseDownGridCoord.Y) / grid.cellSize);
             if (drag)
             {
-                cameraLock = false;
-                Vector2 mouseMove = new Vector2((MousePosition.X - mouseDownGridCoord.X) / grid.cellSize, (MousePosition.Y - mouseDownGridCoord.Y) / grid.cellSize);
-                //Vector2 mouseMoveVec = grid.getGridCoordFromPoint()
                 grid.cameraPosition -= mouseMove;
                 mouseDownGridCoord = new Vector2(MousePosition.X, MousePosition.Y);
             }
-            if (cameraLock)
+            if (place)
             {
-                grid.cameraPosition = box.gridCoord + new Vector2(0.5f, 0.5f);
+                Cell targetCell = new Cell();
+                targetCell.toBorder();
+                Vector2 targetGridCoord = grid.getCellCoordFromPoint(PointToClient(new Point((int)MousePosition.X, (int)MousePosition.Y)));
+                if (targetGridCoord.X >= 0 && targetGridCoord.Y >= 0 && targetGridCoord.X < grid.cols && targetGridCoord.Y < grid.rows)
+                {
+                    targetCell = grid.cellArr[(int)targetGridCoord.X, (int)targetGridCoord.Y];
+                }
+                if (!placingVecs.Contains(targetGridCoord) && (targetCell is not Border))
+                {
+                    grid.placeTyle(targetCell, item);
+                    placingVecs.Add(targetGridCoord);
+                }
             }
             grid.drawGrid(e);
-            box.drawBox(e, grid);
             //box.vision(grid, e);
             //box.drawVisionCone(grid, e);
             //grid.drawWalls(e);
@@ -151,38 +105,23 @@ namespace MovingThingTest
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            MouseEventArgs me = (MouseEventArgs)e;
-            Point clickPos = me.Location;
-            Cell targetCell;
-            Vector2 targetGridCoord = grid.getCellCoordFromPoint(clickPos);
-            if (targetGridCoord.X >= 0 && targetGridCoord.Y >= 0 && targetGridCoord.X < grid.cols && targetGridCoord.Y < grid.rows)
-            {
-                targetCell = grid.cellArr[(int)targetGridCoord.X, (int)targetGridCoord.Y];
-                if (targetCell is not Border && box.currentCell != targetCell)
-                {
-                    switch (mode)
-                    {
-                        case 0:
-                            grid.resetPathFind();
-                            if (targetCell.permeable != 0)
-                            {
-                                grid.PathFind(grid, box.currentCell, targetCell);
-                                //grid.ColourPath();
-                            }
-                            break;
-                        case 1:
-                            grid.placeTyle(targetCell, tyle);
-                            break;
-                        case 2:
-                            break;
-                    }
-                }
-            }
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (mode == 2)
+
+            switch (mode)
+            {
+                case 0:
+                    place = true;
+                    break;
+                case 1:
+                    drag = true;
+                    Point p = PointToScreen(e.Location);
+                    mouseDownGridCoord = new Vector2(p.X, p.Y);
+                    break;
+            }
+            if (mode == 1)
             {
                 drag = true;
                 Point p = PointToScreen(e.Location);
@@ -192,7 +131,12 @@ namespace MovingThingTest
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (mode == 2)
+            if (mode == 0)
+            {
+                placingVecs.Clear();
+                place = false;
+            }
+            if (mode == 1)
             {
                 drag = false;
             }
@@ -203,7 +147,16 @@ namespace MovingThingTest
             grid.cameraSize.Y = grid.cameraSize.Y * 1 - e.Delta / 200f;
             grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
             grid.cellSize = grid.calculateCellSize();
-            box.boxSize = grid.cellSize;
+        }
+
+        private void MapMakerControl_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void MapMakerControl_KeyUp(object sender, KeyEventArgs e)
+        {
+
         }
     }
 }

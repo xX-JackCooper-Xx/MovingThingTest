@@ -19,25 +19,25 @@ namespace MovingThingTest
         public List<menuStrip> menuTabs = new List<menuStrip>();
         public List<dynamic> tabLists = new List<dynamic>() {
             new List<Cell>() {new Cell().toWall(), new Cell().toGrass(), new Cell().toDirt()},
+            new List<Cell>() {new Cell().toSpawn()}
         };
-        public dynamic selectedItem;
+        public Type selectedItem;
         
         public MenuSelector()
         {
             InitializeComponent();
             menuStrip blocks = new menuStrip("blocks");
-            foreach (var lst in tabLists)
+            foreach (var val in tabLists[0])
             {
-                foreach (var val in lst)
-                {
-                    blocks.addItem(val.GetType().Name, val.color);
-                }
+                blocks.addItem(val.GetType().Name, val.color);
+            }
+            menuStrip meta = new menuStrip("meta");
+            foreach(var val in tabLists[1])
+            {
+                meta.addItem(val.GetType().Name, val.color);
             }
             menuTabs.Add(blocks);
-            menuStrip blocks2 = new menuStrip("world");
-            blocks2.addItem("wall", Color.Red);
-            menuTabs.Add(blocks2);
-            menuTabs.Add(new menuStrip("world"));
+            menuTabs.Add(meta);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace MovingThingTest
 
                         if(s > -1)
                         {
-                            selectedItem = tabLists[i][s];
+                            selectedItem = tabLists[i][s].GetType();
                         }
 
                         break;

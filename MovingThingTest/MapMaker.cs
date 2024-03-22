@@ -14,7 +14,7 @@ namespace MovingThingTest
     public partial class MapMaker : Form
     {
 
-        public dynamic item;
+        public Type item;
         MenuSelector ms = new MenuSelector();
         MapMakerControl uc = new MapMakerControl();
         public MapMaker()
@@ -25,13 +25,13 @@ namespace MovingThingTest
 
         private void MapMaker_Load(object sender, EventArgs e)
         {
-            
+
             uc.AutoScroll = true;
             uc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(uc);
             uc.Show();
 
-            
+
             ms.AutoScroll = true;
             ms.Dock = DockStyle.Fill;
             controlsPanel.Controls.Add(ms);
@@ -52,6 +52,20 @@ namespace MovingThingTest
         {
             item = ms.selectedItem;
             uc.item = item;
+        }
+
+        private void MapMaker_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        private void MapMaker_KeyUp(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void MapMaker_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
         }
     }
 }

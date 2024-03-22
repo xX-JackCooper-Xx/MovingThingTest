@@ -68,7 +68,7 @@ namespace MovingThingTest
                             }
                             break;
                         case 1:
-                            grid.placeTyle(targetCell, tyle);
+                            //grid.placeTyle(targetCell, tyle);
                             break;
                         case 2:
                             break;
@@ -171,7 +171,7 @@ namespace MovingThingTest
                             }
                             break;
                         case 1:
-                            grid.placeTyle(targetCell, tyle);
+                            //grid.placeTyle(targetCell, item);
                             break;
                         case 2:
                             break;

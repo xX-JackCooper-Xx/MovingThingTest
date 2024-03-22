@@ -31,8 +31,6 @@
             components = new System.ComponentModel.Container();
             timer1 = new System.Windows.Forms.Timer(components);
             modeButton = new Button();
-            tyleButton = new Button();
-            button1 = new Button();
             Save = new Button();
             pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -50,31 +48,9 @@
             modeButton.Name = "modeButton";
             modeButton.Size = new Size(68, 23);
             modeButton.TabIndex = 3;
-            modeButton.Text = "Move";
+            modeButton.Text = "Place";
             modeButton.UseVisualStyleBackColor = true;
             modeButton.Click += modeButton_Click;
-            // 
-            // tyleButton
-            // 
-            tyleButton.AutoSize = true;
-            tyleButton.BackColor = Color.Gray;
-            tyleButton.Location = new Point(12, 43);
-            tyleButton.Name = "tyleButton";
-            tyleButton.Size = new Size(68, 25);
-            tyleButton.TabIndex = 4;
-            tyleButton.Text = "Tyle";
-            tyleButton.UseVisualStyleBackColor = false;
-            tyleButton.Click += tyleButton_Click;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(12, 110);
-            button1.Name = "button1";
-            button1.Size = new Size(68, 39);
-            button1.TabIndex = 10;
-            button1.Text = "Lock Camera";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
             // 
             // Save
             // 
@@ -101,31 +77,28 @@
             pictureBox1.MouseUp += pictureBox1_MouseUp;
             pictureBox1.MouseWheel += pictureBox1_MouseWheel;
             // 
-            // UserControl1
+            // MapMakerControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.Green;
             Controls.Add(Save);
-            Controls.Add(button1);
-            Controls.Add(tyleButton);
             Controls.Add(modeButton);
             Controls.Add(pictureBox1);
-            Name = "UserControl1";
+            Name = "MapMakerControl";
             Size = new Size(800, 450);
             Load += UserControl1_Load;
+            KeyDown += MapMakerControl_KeyDown;
+            KeyUp += MapMakerControl_KeyUp;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private System.Windows.Forms.Timer timer1;
         private Button modeButton;
-        private Button tyleButton;
-        private Button button1;
         private Button Save;
         private PictureBox pictureBox1;
     }

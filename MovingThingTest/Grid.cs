@@ -32,11 +32,7 @@ namespace MovingThingTest
 
         public Stack<Cell> pathStack = new Stack<Cell>();
 
-        public List<Cell> walls = new List<Cell>();
         public List<Vector2[]> wallSides = new List<Vector2[]>();
-        public List<Cell> grass = new List<Cell>();
-        public List<Cell> dirt = new List<Cell>();
-        public List<Cell> glass = new List<Cell>();
 
         public Grid(int width, int height)
         {
@@ -145,7 +141,6 @@ namespace MovingThingTest
                 {
                     Vector2 screenPos = new Vector2(colsOffset + (i * cellSize), rowsOffset + (j * cellSize));
                     cellArr[i, j] = new Grass(i, j, screenPos, cellSize);
-                    grass.Add(cellArr[i, j]);
                 }
                 cellArr[i, 0] = cellArr[i, 0].toBorder();
 
@@ -183,21 +178,6 @@ namespace MovingThingTest
             //{
             //    cell.drawCell(e);
             //}
-        }
-
-        public void drawWalls(PaintEventArgs e)
-        {
-            Pen pen = new Pen(Color.Black);
-
-            foreach(Wall wall in walls)
-            {
-                Vector2 topLeft = new Vector2((cameraPosition.X - cameraSize.X / 2), (cameraPosition.Y - cameraSize.Y / 2));
-                //wall.drawCell(e, topLeft, cellSize);
-                //cellBrush = new SolidBrush(wall.color);
-                //Rectangle rect = new Rectangle((int)wall.screenPos.X, (int)wall.screenPos.Y, wall.cellSize, wall.cellSize);
-                //e.Graphics.FillRectangle(cellBrush, rect);
-                //e.Graphics.DrawRectangle(pen, rect);
-            }
         }
 
         public Vector2 getGridCoordFromPoint(Point clickPos)
@@ -391,66 +371,24 @@ namespace MovingThingTest
             }
         }
 
-        public void placeTyle(Cell targetCell, int tyle)
+        public void placeTyle(Cell targetCell, Type type)
         {
-            switch (tyle)
+            switch (type.Name)
             {
-                case 0:
-                    if (targetCell is not Wall)
-                    {
-                        removeFromList(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toWall();
-                        walls.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
-                    else
-                    {
-                        walls.Remove(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toGrass();
-                        grass.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
+                case "Wall":
+                    cellArr[targetCell.col, targetCell.row] = targetCell.toWall();
                     break;
-                case 1:
-                    if (targetCell is not Dirt)
-                    {
-                        removeFromList(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toDirt();
-                        dirt.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
-                    else
-                    {
-                        dirt.Remove(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toGrass();
-                        grass.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
+                case "Dirt":
+                    cellArr[targetCell.col, targetCell.row] = targetCell.toDirt();
                     break;
-                case 2:
-                    if (targetCell is not Glass)
-                    {
-                        removeFromList(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toGlass();
-                        glass.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
-                    else
-                    {
-                        glass.Remove(targetCell);
-                        cellArr[targetCell.col, targetCell.row] = targetCell.toGrass();
-                        grass.Add(cellArr[targetCell.col, targetCell.row]);
-                    }
+                case "Glass":
+                    cellArr[targetCell.col, targetCell.row] = targetCell.toGlass();
                     break;
-            }
-        }
-        private void removeFromList(Cell c)
-        {
-            switch (c)
-            {
-                case Wall:
-                    walls.Remove(c);
+                case "Grass":
+                    cellArr[targetCell.col, targetCell.row] = targetCell.toGrass();
                     break;
-                case Grass:
-                    grass.Remove(c);
-                    break;
-                case Dirt:
-                    dirt.Remove(c);
+                case "Spawn":
+                    cellArr[targetCell.col, targetCell.row] = targetCell.toSpawn();
                     break;
             }
         }

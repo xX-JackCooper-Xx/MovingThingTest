@@ -118,6 +118,12 @@ namespace MovingThingTest
             Glass cell = new Glass(col, row, screenPos, cellSize);
             return cell;
         }
+
+        public Cell toSpawn()
+        {
+            Spawn cell = new Spawn(col, row, screenPos, cellSize);
+            return cell;
+        }
     }
 
     public class Wall : Cell
@@ -185,8 +191,31 @@ namespace MovingThingTest
                 Width = 4
             };
 
+
+
             RectangleF rect = new RectangleF(screenPos.X+3, screenPos.Y+3, cellSize-4, cellSize-4);
             e.Graphics.DrawRectangles(pen, new[] { rect });
         }
     }
+    public class Spawn : Cell {
+        public Spawn(int col, int row, Vector2 screenPos, float cellSize) : base(col, row, screenPos, cellSize)
+        {
+            permeable = 1;
+            color = Color.Green;
+            cellBrush.Color = color;
+            ID = 101;
+        }
+
+        public override void drawCell(PaintEventArgs e, Vector2 topleft, float cellSize, int i, int j)
+        {
+            base.drawCell(e, topleft, cellSize, i, j);
+
+            cellBrush.Color = Color.OrangeRed;
+            RectangleF rect = new RectangleF((i - topleft.X) * cellSize, (j - topleft.Y) * cellSize, cellSize, cellSize);
+            PointF[] tri = new PointF[] { new PointF((i - topleft.X) * cellSize, (j - topleft.Y) * cellSize), new PointF((i - topleft.X) * cellSize, (j + 1 - topleft.Y) * cellSize), new PointF((i - topleft.X + 1) * cellSize, (j + 0.5f - topleft.Y) * cellSize) };
+            e.Graphics.FillPolygon(cellBrush, tri);
+            cellBrush.Color = color;
+        }
+    }
+
 }
