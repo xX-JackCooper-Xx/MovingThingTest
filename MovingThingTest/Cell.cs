@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using Windows.UI.Composition;
 
 namespace MovingThingTest
 {
@@ -217,5 +218,4 @@ namespace MovingThingTest
             cellBrush.Color = color;
         }
     }
-
 }

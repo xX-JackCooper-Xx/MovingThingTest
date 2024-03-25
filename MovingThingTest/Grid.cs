@@ -390,6 +390,8 @@ namespace MovingThingTest
                 case "Spawn":
                     cellArr[targetCell.col, targetCell.row] = targetCell.toSpawn();
                     break;
+                case "enemyPath":
+                    break;
             }
         }
     }

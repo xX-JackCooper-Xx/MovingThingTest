@@ -19,9 +19,11 @@ namespace MovingThingTest
         public List<menuStrip> menuTabs = new List<menuStrip>();
         public List<dynamic> tabLists = new List<dynamic>() {
             new List<Cell>() {new Cell().toWall(), new Cell().toGrass(), new Cell().toDirt()},
-            new List<Cell>() {new Cell().toSpawn()}
+            new List<Cell>() {new Cell().toSpawn()},
+            new List<enemyPath> {new enemyPath()}
         };
-        public Type selectedItem;
+        public Type selectedItem = typeof(Grass);
+        private Rectangle selectedRectangle = new Rectangle();
         
         public MenuSelector()
         {
@@ -36,8 +38,15 @@ namespace MovingThingTest
             {
                 meta.addItem(val.GetType().Name, val.color);
             }
+            menuStrip path = new menuStrip("path");
+            foreach (var val in tabLists[2])
+            {
+                path.addItem(val.GetType().Name, val.color);
+            }
+
             menuTabs.Add(blocks);
             menuTabs.Add(meta);
+            menuTabs.Add(path);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

@@ -15,6 +15,7 @@ namespace MovingThingTest
     public partial class MapMakerControl : UserControl
     {
         public Grid grid;
+        public List<enemyPath> enemyPaths = new List<enemyPath>();
         public Type item = typeof(Grass);
 
         public bool drag = false;
@@ -93,6 +94,9 @@ namespace MovingThingTest
                 }
                 if (!placingVecs.Contains(targetGridCoord) && (targetCell is not Border))
                 {
+                    if(item.Name == "enemyPath")
+                    {
+                    }
                     grid.placeTyle(targetCell, item);
                     placingVecs.Add(targetGridCoord);
                 }
