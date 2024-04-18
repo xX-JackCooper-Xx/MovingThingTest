@@ -32,8 +32,8 @@ namespace MovingThingTest
         public SolidBrush cellBrush = new SolidBrush(Color.Black);
 
         public Vector2[] neighbours = {
-            new Vector2(-1,0),
             new Vector2(0,1),
+            new Vector2(-1,0),
             new Vector2(0,-1),
             new Vector2(1,0)
         };

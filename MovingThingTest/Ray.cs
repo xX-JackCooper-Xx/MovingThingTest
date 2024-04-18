@@ -144,5 +144,11 @@ namespace MovingThingTest
             Ray ray2 = new Ray(ray.startPos, new Vector2((int)Math.Round(ray.endPos.X,i), (int)Math.Round(ray.endPos.Y,i)), ray.angle);   
             return ray2;
         }
+
+        public void drawRay(PaintEventArgs e, Vector2 topLeft, float size)
+        {
+            Pen p = new Pen(Color.Black);
+            e.Graphics.DrawLine(p, new Point((int)((startPos.X - topLeft.X)*size), (int)((startPos.Y - topLeft.Y)*size)), new Point((int)((endPos.X - topLeft.X) * size), (int)((endPos.Y - topLeft.Y) * size)));
+        }
     }
 }

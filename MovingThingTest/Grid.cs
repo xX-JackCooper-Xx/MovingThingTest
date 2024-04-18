@@ -47,39 +47,7 @@ namespace MovingThingTest
             cameraSize.X = screenSizeRatio * cameraSize.Y;
 
             cameraPosition = new Vector2(cameraSize.X/2, cameraSize.Y/2);
-
-
-
             cameraRatio = cameraSize.X / cameraSize.Y;
-
-            //int tempcellSize1 = (screenSize.Height / rows);
-            //int tempcellSize2 = (screenSize.Width / cols);
-
-            //if (tempcellSize1 < tempcellSize2)
-            //{
-            //    this.cellSize = tempcellSize1;
-            //}
-            //else
-            //{
-            //    this.cellSize = tempcellSize2;
-            //}
-
-            //cellArr = new Cell[cols, rows];
-
-            //this.rowsOffset = screenSize.Height / 2 - (float)rows / 2 * cellSize;
-            //this.colsOffset = screenSize.Width / 2 - (float)cols / 2 * cellSize;
-
-            //float tempcellSize1 = screenSize.Height / cameraSize.Y;
-            //float tempcellSize2 = screenSize.Width / cameraSize.X;
-
-            //if (tempcellSize1 < tempcellSize2)
-            //{
-            //    this.cellSize = tempcellSize1;
-            //}
-            //else
-            //{
-            //    this.cellSize = tempcellSize2;
-            //}
 
             cellArr = new Cell[cols, rows];
 
@@ -89,6 +57,28 @@ namespace MovingThingTest
             this.colsOffset = 0;
             
 
+        }
+
+        public Grid(int width, int height, int rows, int cols)
+        {
+            this.screenSize.Width = width;
+            this.screenSize.Height = height;
+            this.rows = rows;
+            this.cols = cols;
+
+            float screenSizeRatio = (float)screenSize.Width / (float)screenSize.Height;
+            cameraSize.Y = 7;
+            cameraSize.X = screenSizeRatio * cameraSize.Y;
+
+            cameraPosition = new Vector2(cameraSize.X / 2, cameraSize.Y / 2);
+            cameraRatio = cameraSize.X / cameraSize.Y;
+
+            cellArr = new Cell[cols, rows];
+
+            cellSize = calculateCellSize();
+
+            this.rowsOffset = 0;
+            this.colsOffset = 0;
         }
         
         public void updateScreenSize(int width, int height)
@@ -276,6 +266,7 @@ namespace MovingThingTest
 
             openList = new List<Cell>();
             closedList = new List<Cell>();
+
 
         }
 

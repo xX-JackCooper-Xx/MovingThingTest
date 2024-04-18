@@ -1,6 +1,6 @@
 ﻿namespace MovingThingTest
 {
-    partial class MapMakerControl
+    partial class PlayerControl : UserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -47,7 +47,7 @@
             modeButton.Name = "modeButton";
             modeButton.Size = new Size(68, 23);
             modeButton.TabIndex = 3;
-            modeButton.Text = "Place";
+            modeButton.Text = "Move";
             modeButton.UseVisualStyleBackColor = true;
             modeButton.Click += modeButton_Click;
             // 
@@ -65,7 +65,7 @@
             pictureBox1.MouseUp += pictureBox1_MouseUp;
             pictureBox1.MouseWheel += pictureBox1_MouseWheel;
             // 
-            // MapMakerControl
+            // PlayerControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -73,11 +73,8 @@
             BackColor = Color.Green;
             Controls.Add(modeButton);
             Controls.Add(pictureBox1);
-            Name = "MapMakerControl";
+            Name = "PlayerControl";
             Size = new Size(800, 450);
-            Load += UserControl1_Load;
-            KeyDown += MapMakerControl_KeyDown;
-            KeyUp += MapMakerControl_KeyUp;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

@@ -64,8 +64,7 @@
         }
 
         #endregion
-
-        private PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
+        public PictureBox pictureBox1;
     }
 }

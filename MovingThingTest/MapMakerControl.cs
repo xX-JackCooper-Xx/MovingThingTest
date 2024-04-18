@@ -6,16 +6,23 @@ using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.ApplicationModel;
 
 namespace MovingThingTest
 {
     public partial class MapMakerControl : UserControl
     {
+
+        string filePath;
+        bool saved;
+
         public Grid grid;
         public List<enemyPath> enemyPaths = new List<enemyPath>();
+        public int pathNumber = 0;
         public Type item = typeof(Grass);
 
         public bool drag = false;
@@ -32,6 +39,14 @@ namespace MovingThingTest
 
             grid = new Grid(this.Width, this.Height);
             grid.createGrid();
+        }
+
+        public MapMakerControl(string filePath, Grid grid, List<enemyPath> enemyPaths)
+        {
+            InitializeComponent();
+            this.filePath = filePath;
+            this.grid = grid;
+            this.enemyPaths = enemyPaths;
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -55,14 +70,57 @@ namespace MovingThingTest
 
         private void Save_Click(object sender, EventArgs e)
         {
-            saveFile();
+            //if (!savedAs)
+            //{
+            //    Save.BackColor = Color.Blue;
+            //    SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //    saveFileDialog.DefaultExt = "txt";
+            //    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //    {
+            //        filePath = saveFileDialog.FileName;
+
+            //        saveFile();
+            //        savedAs = true;
+            //        saved = true;
+            //    }
+            //    Save.BackColor = Color.Green;
+            //}
+            //else if (!saved)
+            //{
+            //    saveFile();
+            //    saved = true;
+            //    Save.BackColor = Color.Green;
+            //}
+        }
+
+        private void LoadBtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.DefaultExt = "txt";
+            openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                filePath = openFileDialog.FileName;
+                loadFile();
+            }
+        }
+
+        private void loadFile()
+        {
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+
+            }
         }
 
         private void saveFile()
         {
-            Save.BackColor = Color.Blue;
-            using (StreamWriter sw = new StreamWriter("P:\\6th Form Computing\\17ParkinsonM\\NEA-File_Save\\saveFile.txt"))
+            using (StreamWriter sw = new StreamWriter(filePath))
             {
+                sw.Write(grid.cols.ToString());
+                sw.Write(",");
+                sw.Write(grid.rows.ToString());
+                sw.Write('\n');
                 for (int i = 0; i < grid.cols; i++)
                 {
                     for (int j = 0; j < grid.rows; j++)
@@ -71,12 +129,31 @@ namespace MovingThingTest
                     }
                     sw.Write('\n');
                 }
-                Save.BackColor = Color.Green;
+                sw.Write('\n');
+                sw.Write('\n');
+                foreach (enemyPath ep in enemyPaths)
+                {
+                    sw.Write(ep.saveString());
+                    sw.Write("\n");
+                }
             }
+            //Save.BackColor = Color.Blue;
+            //using (StreamWriter sw = new StreamWriter("P:\\6th Form Computing\\17ParkinsonM\\NEA-File_Save\\saveFile.txt"))
+            //{
+            //    for (int i = 0; i < grid.cols; i++)
+            //    {
+            //        for (int j = 0; j < grid.rows; j++)
+            //        {
+            //            sw.Write(grid.cellArr[i, j].ID.ToString().PadLeft(3, '0'));
+            //        }
+            //        sw.Write('\n');
+            //    }
+            //    Save.BackColor = Color.Green;
+            //}
         }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            bool valid = true;
             Vector2 mouseMove = new Vector2((MousePosition.X - mouseDownGridCoord.X) / grid.cellSize, (MousePosition.Y - mouseDownGridCoord.Y) / grid.cellSize);
             if (drag)
             {
@@ -94,14 +171,30 @@ namespace MovingThingTest
                 }
                 if (!placingVecs.Contains(targetGridCoord) && (targetCell is not Border))
                 {
-                    if(item.Name == "enemyPath")
+                    if (item.Name == "existingEnemyPath")
+                    {
+                        enemyPaths[pathNumber].addPoint(targetCell, grid);
+                    }
+                    else
                     {
                     }
+
                     grid.placeTyle(targetCell, item);
+                    foreach (enemyPath p in enemyPaths)
+                    {
+                        p.placeOver(targetCell, grid);
+                    }
+
                     placingVecs.Add(targetGridCoord);
                 }
             }
+
             grid.drawGrid(e);
+            Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            foreach (existingEnemyPath P in enemyPaths)
+            {
+                P.drawPath(e, topLeft, grid.cellSize, Font);
+            }
             //box.vision(grid, e);
             //box.drawVisionCone(grid, e);
             //grid.drawWalls(e);
@@ -117,6 +210,8 @@ namespace MovingThingTest
             switch (mode)
             {
                 case 0:
+                    saved = false;
+                    //Save.BackColor = Color.Blue;
                     place = true;
                     break;
                 case 1:
@@ -124,12 +219,6 @@ namespace MovingThingTest
                     Point p = PointToScreen(e.Location);
                     mouseDownGridCoord = new Vector2(p.X, p.Y);
                     break;
-            }
-            if (mode == 1)
-            {
-                drag = true;
-                Point p = PointToScreen(e.Location);
-                mouseDownGridCoord = new Vector2(p.X, p.Y);
             }
         }
 
@@ -162,5 +251,7 @@ namespace MovingThingTest
         {
 
         }
+
+
     }
 }

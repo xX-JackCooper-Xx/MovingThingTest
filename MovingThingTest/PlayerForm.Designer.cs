@@ -1,6 +1,6 @@
 ﻿namespace MovingThingTest
 {
-    partial class MapMaker
+    partial class PlayerForm : Form
     {
         /// <summary>
         /// Required designer variable.
@@ -30,10 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             mapPanel = new Panel();
+            LoadBtn = new Button();
             controlsPanel = new Panel();
             timer1 = new System.Windows.Forms.Timer(components);
-            LoadBtn = new Button();
-            Save = new Button();
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -43,13 +42,23 @@
             mapPanel.AutoSize = true;
             mapPanel.BackColor = Color.Green;
             mapPanel.Controls.Add(LoadBtn);
-            mapPanel.Controls.Add(Save);
             mapPanel.Location = new Point(0, 0);
             mapPanel.Margin = new Padding(0);
             mapPanel.Name = "mapPanel";
             mapPanel.Size = new Size(500, 450);
             mapPanel.TabIndex = 3;
             mapPanel.Paint += panel1_Paint;
+            // 
+            // LoadBtn
+            // 
+            LoadBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            LoadBtn.Location = new Point(12, 416);
+            LoadBtn.Name = "LoadBtn";
+            LoadBtn.Size = new Size(68, 23);
+            LoadBtn.TabIndex = 15;
+            LoadBtn.Text = "Load";
+            LoadBtn.UseVisualStyleBackColor = true;
+            LoadBtn.Click += LoadBtn_Click;
             // 
             // controlsPanel
             // 
@@ -67,29 +76,7 @@
             timer1.Interval = 50;
             timer1.Tick += timer1_Tick;
             // 
-            // LoadBtn
-            // 
-            LoadBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            LoadBtn.Location = new Point(86, 416);
-            LoadBtn.Name = "LoadBtn";
-            LoadBtn.Size = new Size(68, 23);
-            LoadBtn.TabIndex = 15;
-            LoadBtn.Text = "Load";
-            LoadBtn.UseVisualStyleBackColor = true;
-            LoadBtn.Click += LoadBtn_Click;
-            // 
-            // Save
-            // 
-            Save.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            Save.Location = new Point(12, 416);
-            Save.Name = "Save";
-            Save.Size = new Size(68, 23);
-            Save.TabIndex = 14;
-            Save.Text = "Save";
-            Save.UseVisualStyleBackColor = true;
-            Save.Click += Save_Click;
-            // 
-            // MapMaker
+            // PlayerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -97,7 +84,7 @@
             Controls.Add(controlsPanel);
             Controls.Add(mapPanel);
             IsMdiContainer = true;
-            Name = "MapMaker";
+            Name = "PlayerForm";
             Load += MapMaker_Load;
             KeyDown += MapMaker_KeyDown;
             KeyPress += MapMaker_KeyPress;
@@ -113,6 +100,5 @@
         private Panel controlsPanel;
         private System.Windows.Forms.Timer timer1;
         private Button LoadBtn;
-        private Button Save;
     }
 }
