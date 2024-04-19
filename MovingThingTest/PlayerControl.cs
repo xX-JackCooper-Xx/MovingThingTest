@@ -27,7 +27,7 @@ namespace MovingThingTest
 
         public int mode = 0;
         public int tyle = 0;
-        public PlayerControl()
+        public PlayerControl(int squadSize)
         {
             InitializeComponent();
 
@@ -35,17 +35,17 @@ namespace MovingThingTest
             grid.createGrid();
 
             //box = new Box(grid, grid.cellArr[1, 1].screenPos, grid.cellSize);
-            squad = new Squad(grid.cellArr[1, 1], grid, 5);
+            squad = new Squad(grid.cellArr[1, 1], grid, squadSize);
         }
 
-        public PlayerControl(string filePath, Grid grid, List<enemyPath> enemyPaths, Cell spawnCell)
+        public PlayerControl(string filePath, Grid grid, List<enemyPath> enemyPaths, Cell spawnCell, int squadSize)
         {
             InitializeComponent();
             this.filePath = filePath;
             this.grid = grid;
             this.enemyPaths = enemyPaths;
             loadEnemies(enemyPaths);
-            squad = new Squad(spawnCell, grid, 5);
+            squad = new Squad(spawnCell, grid, squadSize);
         }
 
         public void loadEnemies(List<enemyPath> enemyPaths)
@@ -60,11 +60,17 @@ namespace MovingThingTest
         {
             grid.updateScreenSize(Width, Height);
             //box.UpdatePos(grid, grid.pathStack);
-
+            List<Enemy> deadEnemies = new List<Enemy>();
             foreach(Enemy enemy in enemies)
             {
                 enemy.updatePos();
+                if (enemy.health <= 0) { deadEnemies.Add(enemy); }
             }
+            foreach(Enemy enemy in deadEnemies)
+            {
+                enemies.Remove(enemy);
+            }
+            
             squad.updatePos(cellStack, grid, enemies);
             pictureBox1.Invalidate();
         }

@@ -147,7 +147,7 @@ namespace MovingThingTest
 
         public void drawRay(PaintEventArgs e, Vector2 topLeft, float size)
         {
-            Pen p = new Pen(Color.Black);
+            Pen p = new Pen(Color.Black, 5);
             e.Graphics.DrawLine(p, new Point((int)((startPos.X - topLeft.X)*size), (int)((startPos.Y - topLeft.Y)*size)), new Point((int)((endPos.X - topLeft.X) * size), (int)((endPos.Y - topLeft.Y) * size)));
         }
     }

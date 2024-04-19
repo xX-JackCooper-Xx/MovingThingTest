@@ -75,11 +75,11 @@ namespace MovingThingTest
 
         public void drawSquad(PaintEventArgs e, Grid grid, float size)
         {
-            SolidBrush brush = new SolidBrush(Color.Yellow);
-            Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-            e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
-            Ray ray = Ray.castRay(grid, centerCoord, direction*Math.PI/2-Math.PI/2);
-            ray.drawRay(e, topLeft, size);
+            //SolidBrush brush = new SolidBrush(Color.Yellow);
+            //Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            //e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
+            //Ray ray = Ray.castRay(grid, centerCoord, direction*Math.PI/2-Math.PI/2);
+            //ray.drawRay(e, topLeft, size);
             drawUnits(e, grid, size);
         }
 
@@ -155,87 +155,7 @@ namespace MovingThingTest
                 case "wedge":
                     targetCells = new List<Cell>();
                     formationDirections = new List<int>();
-                    targetCells.Add(currentCell);
-                    foreach (Soldier s in units)
-                    {
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                    }
-
-                    Vector2 behind = getVecfromDirection((direction + 2) % 4);
-                    Vector2 left = getVecfromDirection((direction + 3) % 4);
-                    Vector2 right = getVecfromDirection((direction + 1) % 4);
-                    Vector2 infront = getVecfromDirection(direction);
-
-                    Cell nextCell = grid.cellArr[currentCell.col + (int)(behind.X + left.X), currentCell.row + (int)(behind.Y + left.Y)];
-                    Cell infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                    Cell insideNextCell = grid.cellArr[nextCell.col + (int)right.X, nextCell.row + (int)right.Y];
-
-                    if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                    {
-                        targetCells.Add(nextCell);
-                    }
-                    else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                    {
-                        targetCells.Add(currentCell);
-                    }
-                    else if (infrontNextCell.permeable == 0)
-                    {
-                        targetCells.Add(insideNextCell);
-                    }
-                    else
-                    {
-                        targetCells.Add(infrontNextCell);
-                    }
-
-                    nextCell = grid.cellArr[currentCell.col + (int)(behind.X + right.X), currentCell.row + (int)(behind.Y + right.Y)];
-                    infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                    insideNextCell = grid.cellArr[nextCell.col + (int)left.X, nextCell.row + (int)left.Y];
-
-                    if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                    {
-                        targetCells.Add(nextCell);
-                    }
-                    else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                    {
-                        targetCells.Add(currentCell);
-                    }
-                    else if (infrontNextCell.permeable == 0)
-                    {
-                        targetCells.Add(insideNextCell);
-                    }
-                    else
-                    {
-                        targetCells.Add(infrontNextCell);
-                    }
-
-                    int max = (int)Math.Ceiling(units.Count / 2f);
-                    for (int i = 1; i < max; i++)
-                    {
-                        int insideMult = ((2 * i) % 4) - 1;
-                        nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X - right.X * insideMult), targetCells[i].row + (int)(behind.Y - right.Y * insideMult)];
-                        infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                        insideNextCell = grid.cellArr[nextCell.col + (int)(right.X * insideMult), nextCell.row + (int)(right.Y * insideMult)];
-                        if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                        {
-                            targetCells.Add(nextCell);
-                        }
-                        else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                        {
-                            targetCells.Add(currentCell);
-                        }
-                        else if (infrontNextCell.permeable == 0)
-                        {
-                            targetCells.Add(insideNextCell);
-                        }
-                        else
-                        {
-                            targetCells.Add(infrontNextCell);
-                        }
-                    }
+                    wedge(grid);
 
                     break;
             }
@@ -246,7 +166,7 @@ namespace MovingThingTest
             targetCells = new List<Cell>();
             formationDirections = new List<int>();
             int tempDirection = direction;
-            Vector2 directionVec = getVecfromDirection(tempDirection);
+            Vector2 directionVec;
             switch(formation){
                 case "herringbone":
                     targetCells.Add(currentCell);
@@ -283,88 +203,93 @@ namespace MovingThingTest
 
                     break;
                 case "wedge":
-                    targetCells.Add(currentCell);
-                    foreach (Soldier s in units)
-                    {
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                        formationDirections.Add(direction);
-                    }
-                    Vector2 behind = getVecfromDirection((direction + 2) % 4);
-                    Vector2 left = getVecfromDirection((direction + 3 ) % 4);
-                    Vector2 right = getVecfromDirection((direction + 1) % 4);
-                    Vector2 infront = getVecfromDirection(direction);
-
-                    Cell nextCell = grid.cellArr[currentCell.col + (int)(behind.X + left.X), currentCell.row + (int)(behind.Y + left.Y)];
-                    Cell infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                    Cell insideNextCell = grid.cellArr[nextCell.col + (int)right.X, nextCell.row + (int)right.Y];
-
-                    if(nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                    {
-                        targetCells.Add(nextCell);
-                    }
-                    else if(nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                    {
-                        targetCells.Add(currentCell);
-                    }
-                    else if(infrontNextCell.permeable == 0)
-                    {
-                        targetCells.Add(insideNextCell);
-                    }
-                    else
-                    {
-                        targetCells.Add(infrontNextCell);
-                    }
-
-                    nextCell = grid.cellArr[currentCell.col + (int)(behind.X + right.X), currentCell.row + (int)(behind.Y + right.Y)];
-                    infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                    insideNextCell = grid.cellArr[nextCell.col + (int)left.X, nextCell.row + (int)left.Y];
-
-                    if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                    {
-                        targetCells.Add(nextCell);
-                    }
-                    else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                    {
-                        targetCells.Add(currentCell);
-                    }
-                    else if (infrontNextCell.permeable == 0)
-                    {
-                        targetCells.Add(insideNextCell);
-                    }
-                    else
-                    {
-                        targetCells.Add(infrontNextCell);
-                    }
-
-                    int max = (int)Math.Ceiling(units.Count / 2f);
-                    for(int i = 1; i < max; i++)
-                    {
-                        int insideMult = ((2*i)%4)-1;
-                        nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X  - right.X * insideMult), targetCells[i].row + (int)(behind.Y - right.Y * insideMult)];
-                        infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                        insideNextCell = grid.cellArr[nextCell.col + (int)(right.X * insideMult), nextCell.row + (int)(right.Y * insideMult)];
-                        if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
-                        {
-                            targetCells.Add(nextCell);
-                        }
-                        else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
-                        {
-                            targetCells.Add(currentCell);
-                        }
-                        else if (infrontNextCell.permeable == 0)
-                        {
-                            targetCells.Add(insideNextCell);
-                        }
-                        else
-                        {
-                            targetCells.Add(infrontNextCell);
-                        }
-                    }
+                    wedge(grid);
 
                     break;
+            }
+        }
+
+        public void wedge(Grid grid)
+        {
+            targetCells.Add(currentCell);
+            foreach (Soldier s in units)
+            {
+                formationDirections.Add(direction);
+                formationDirections.Add(direction);
+                formationDirections.Add(direction);
+                formationDirections.Add(direction);
+                formationDirections.Add(direction);
+            }
+            Vector2 behind = getVecfromDirection((direction + 2) % 4);
+            Vector2 left = getVecfromDirection((direction + 3) % 4);
+            Vector2 right = getVecfromDirection((direction + 1) % 4);
+            Vector2 infront = getVecfromDirection(direction);
+
+            Cell nextCell = grid.cellArr[currentCell.col + (int)(behind.X + left.X), currentCell.row + (int)(behind.Y + left.Y)];
+            Cell infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+            Cell insideNextCell = grid.cellArr[nextCell.col + (int)right.X, nextCell.row + (int)right.Y];
+
+            if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+            {
+                targetCells.Add(nextCell);
+            }
+            else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+            {
+                targetCells.Add(currentCell);
+            }
+            else if (infrontNextCell.permeable == 0)
+            {
+                targetCells.Add(insideNextCell);
+            }
+            else
+            {
+                targetCells.Add(infrontNextCell);
+            }
+
+            nextCell = grid.cellArr[currentCell.col + (int)(behind.X + right.X), currentCell.row + (int)(behind.Y + right.Y)];
+            infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+            insideNextCell = grid.cellArr[nextCell.col + (int)left.X, nextCell.row + (int)left.Y];
+
+            if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+            {
+                targetCells.Add(nextCell);
+            }
+            else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+            {
+                targetCells.Add(currentCell);
+            }
+            else if (infrontNextCell.permeable == 0)
+            {
+                targetCells.Add(insideNextCell);
+            }
+            else
+            {
+                targetCells.Add(infrontNextCell);
+            }
+
+            int max = units.Count - 2;
+            for (int i = 1; i < max; i++)
+            {
+                int insideMult = ((2 * i) % 4) - 1;
+                nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X - right.X * insideMult), targetCells[i].row + (int)(behind.Y - right.Y * insideMult)];
+                infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+                insideNextCell = grid.cellArr[nextCell.col + (int)(right.X * insideMult), nextCell.row + (int)(right.Y * insideMult)];
+                if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+                {
+                    targetCells.Add(nextCell);
+                }
+                else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                {
+                    targetCells.Add(currentCell);
+                }
+                else if (infrontNextCell.permeable == 0)
+                {
+                    targetCells.Add(insideNextCell);
+                }
+                else
+                {
+                    targetCells.Add(infrontNextCell);
+                }
             }
         }
 

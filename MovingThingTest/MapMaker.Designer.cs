@@ -30,10 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             mapPanel = new Panel();
-            controlsPanel = new Panel();
-            timer1 = new System.Windows.Forms.Timer(components);
+            exitBtn = new Button();
             LoadBtn = new Button();
             Save = new Button();
+            controlsPanel = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -42,6 +43,7 @@
             mapPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             mapPanel.AutoSize = true;
             mapPanel.BackColor = Color.Green;
+            mapPanel.Controls.Add(exitBtn);
             mapPanel.Controls.Add(LoadBtn);
             mapPanel.Controls.Add(Save);
             mapPanel.Location = new Point(0, 0);
@@ -51,21 +53,16 @@
             mapPanel.TabIndex = 3;
             mapPanel.Paint += panel1_Paint;
             // 
-            // controlsPanel
+            // exitBtn
             // 
-            controlsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            controlsPanel.Location = new Point(500, 0);
-            controlsPanel.Margin = new Padding(0);
-            controlsPanel.Name = "controlsPanel";
-            controlsPanel.Size = new Size(300, 450);
-            controlsPanel.TabIndex = 5;
-            controlsPanel.Paint += controlsPanel_Paint;
-            // 
-            // timer1
-            // 
-            timer1.Enabled = true;
-            timer1.Interval = 50;
-            timer1.Tick += timer1_Tick;
+            exitBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            exitBtn.Location = new Point(160, 416);
+            exitBtn.Name = "exitBtn";
+            exitBtn.Size = new Size(75, 23);
+            exitBtn.TabIndex = 7;
+            exitBtn.Text = "Exit";
+            exitBtn.UseVisualStyleBackColor = true;
+            exitBtn.Click += exitBtn_Click;
             // 
             // LoadBtn
             // 
@@ -88,6 +85,22 @@
             Save.Text = "Save";
             Save.UseVisualStyleBackColor = true;
             Save.Click += Save_Click;
+            // 
+            // controlsPanel
+            // 
+            controlsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            controlsPanel.Location = new Point(500, 0);
+            controlsPanel.Margin = new Padding(0);
+            controlsPanel.Name = "controlsPanel";
+            controlsPanel.Size = new Size(300, 450);
+            controlsPanel.TabIndex = 5;
+            controlsPanel.Paint += controlsPanel_Paint;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 50;
+            timer1.Tick += timer1_Tick;
             // 
             // MapMaker
             // 
@@ -114,5 +127,6 @@
         private System.Windows.Forms.Timer timer1;
         private Button LoadBtn;
         private Button Save;
+        private Button exitBtn;
     }
 }

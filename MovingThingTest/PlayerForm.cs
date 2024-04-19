@@ -16,11 +16,14 @@ namespace MovingThingTest
         public string item;
         public int pathNum;
         MenuSelector ms = new MenuSelector("play");
-        PlayerControl pc = new PlayerControl();
-
-        public PlayerForm()
+        PlayerControl pc;
+        int squadSize = 5;
+        Thread th;
+        public PlayerForm(int squadSize)
         {
             InitializeComponent();
+            this.squadSize = squadSize;
+            pc = new PlayerControl(squadSize);
         }
 
 
@@ -51,7 +54,7 @@ namespace MovingThingTest
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if(ms.pathNumber != pathNum)
+            if (ms.pathNumber != pathNum)
             {
                 pathNum = ms.pathNumber;
                 pc.squad.changeFormation(pathNum, pc.grid);
@@ -168,26 +171,33 @@ namespace MovingThingTest
                     enemyPaths.Add(new existingEnemyPath(loop, pathAnchors, pathCellsLists, color));
 
                 }
-
-
-
-
             }
 
 
-            pc = new PlayerControl(filePath, grid, enemyPaths, spawnCell);
+            pc = new PlayerControl(filePath, grid, enemyPaths, spawnCell, squadSize);
             pc.AutoScroll = true;
             pc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(pc);
             pc.Show();
-
-
 
             ms = new MenuSelector(enemyPaths, "play");
             ms.AutoScroll = true;
             ms.Dock = DockStyle.Fill;
             controlsPanel.Controls.Add(ms);
             ms.Show();
+        }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            th = new Thread(openMainForm);
+            th.SetApartmentState(ApartmentState.STA);
+            th.Start();
+        }
+
+        private void openMainForm()
+        {
+            Application.Run(new Main());
         }
     }
 }

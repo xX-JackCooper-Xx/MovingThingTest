@@ -15,7 +15,11 @@ namespace MovingThingTest
         protected Vector2 centerCoord;
         public int direction = 0;
         protected Color color = Color.Red;
+        Ray ray = new Ray();
         Ray viewRay = new Ray();
+        bool shooting = false;
+        double rayAngle = 0;
+        Vector2 shootingPoint;
         public Soldier(Cell currentCell)
         {
             this.currentCell = currentCell;
@@ -43,30 +47,48 @@ namespace MovingThingTest
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
         }
 
-        public void drawSoldier(PaintEventArgs e, Grid grid, float size)
+        public virtual void drawSoldier(PaintEventArgs e, Grid grid, float size)
         { 
             SolidBrush brush = new SolidBrush(color);
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
             e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
-            Ray ray = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
-            ray.drawRay(e, topLeft, size);
+            if (shooting)
+            {
+                viewRay = Ray.castRay(grid, centerCoord, rayAngle);
+                viewRay.endPos = shootingPoint;
+            }
+            else
+            {
+                viewRay = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
+            }
+            viewRay.drawRay(e, topLeft, size);
         }
 
         public void checkForEnemy(List<Enemy> enemies, Grid grid)
         {
+            shooting = false;
             foreach(Enemy enemy in enemies)
             {
                 float distanceX = Math.Abs(enemy.centerCoord.X - centerCoord.X);
                 float distanceY = Math.Abs(enemy.centerCoord.Y - centerCoord.Y);
                 float distance = MathF.Sqrt(distanceY * distanceY + distanceX * distanceX);
-                double angle = MathF.Atan(distanceY / distanceX);
+
+                Vector2 normal = Vector2.Normalize(enemy.centerCoord - centerCoord);
+                Vector2 right = new Vector2(1, 0);
+                double dot = Vector2.Dot(normal, right);
+                double det = normal.X * right.Y - normal.Y * right.X;
+                double angle = -Math.Atan2(det, dot);
+
                 if (distance <= 5 && distance > 0)
                 {
-                    Ray ray = Ray.castRay(grid, centerCoord, angle);
+                    ray = Ray.castRay(grid, centerCoord, angle);
                     Vector2 rayVector = ray.endPos - ray.startPos;
                     float rayVectorLength = MathF.Sqrt(rayVector.X * rayVector.X + rayVector.Y * rayVector.Y);
-                    if (rayVectorLength >= distance)
+                    if (rayVectorLength >= distance && (ray.angle > direction* Math.PI / 2 - 3*Math.PI / 4 & ray.angle < direction * Math.PI / 2 - Math.PI / 4))
                     {
+                        rayAngle = angle;
+                        shootingPoint = enemy.centerCoord;
+                        shooting = true;
                         enemy.shooting = true;
                     }
                 }

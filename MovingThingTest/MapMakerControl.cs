@@ -33,11 +33,11 @@ namespace MovingThingTest
         public int tyle = 0;
 
         public List<Vector2> placingVecs = new List<Vector2>();
-        public MapMakerControl()
+        public MapMakerControl(int gridWidth, int gridHeight)
         {
             InitializeComponent();
 
-            grid = new Grid(this.Width, this.Height);
+            grid = new Grid(this.Width, this.Height, gridHeight, gridWidth);
             grid.createGrid();
         }
 

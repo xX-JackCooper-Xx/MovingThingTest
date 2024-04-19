@@ -19,9 +19,11 @@ namespace MovingThingTest
         public Type item;
         public int pathNum;
         MenuSelector ms = new MenuSelector("map");
-        MapMakerControl uc = new MapMakerControl();
-        public MapMaker()
+        MapMakerControl uc = new MapMakerControl(32, 18);
+        Thread th;
+        public MapMaker(int width, int height)
         {
+            uc = new MapMakerControl(width, height);
             InitializeComponent();
         }
 
@@ -166,11 +168,12 @@ namespace MovingThingTest
                 grid = new Grid(mapPanel.Width, mapPanel.Height, row, col);
                 grid.createGrid();
 
-                for (int i = 0; i < col; i++) {
+                for (int i = 0; i < col; i++)
+                {
                     line = sr.ReadLine();
                     string[] numArr = line.Split(',');
                     int j = 0;
-                    foreach(string str in numArr)
+                    foreach (string str in numArr)
                     {
                         switch (str)
                         {
@@ -197,7 +200,7 @@ namespace MovingThingTest
                 line = sr.ReadLine();
                 int pathNumber = Convert.ToInt16(line);
 
-                for(int i = 0; i < pathNumber; i++)
+                for (int i = 0; i < pathNumber; i++)
                 {
                     List<Cell> pathAnchors = new List<Cell>();
                     List<dynamic> pathCellsLists = new List<dynamic>();
@@ -206,20 +209,20 @@ namespace MovingThingTest
 
                     line = sr.ReadLine();
                     string[] strArr = line.Split(",");
-                    
-                    for(int j = 0; j < strArr.Length-1; j += 2) 
+
+                    for (int j = 0; j < strArr.Length - 1; j += 2)
                     {
-                        pathAnchors.Add(grid.cellArr[Convert.ToInt16(strArr[j+1]), Convert.ToInt16(strArr[j])]);
+                        pathAnchors.Add(grid.cellArr[Convert.ToInt16(strArr[j + 1]), Convert.ToInt16(strArr[j])]);
                     }
 
-                    for(int j = 0; j < strArr.Length/2 - 1; j++)
+                    for (int j = 0; j < strArr.Length / 2 - 1; j++)
                     {
                         List<Cell> tempList = new List<Cell>();
                         line = sr.ReadLine();
                         string[] strArr2 = line.Split(",");
-                        for(int k = 0; k < strArr2.Length-1; k += 2)
+                        for (int k = 0; k < strArr2.Length - 1; k += 2)
                         {
-                            tempList.Add(grid.cellArr[Convert.ToInt16(strArr2[k+1]), Convert.ToInt16(strArr2[k])]);
+                            tempList.Add(grid.cellArr[Convert.ToInt16(strArr2[k + 1]), Convert.ToInt16(strArr2[k])]);
                         }
                         pathCellsLists.Add(tempList);
                     }
@@ -248,6 +251,19 @@ namespace MovingThingTest
             ms.Dock = DockStyle.Fill;
             controlsPanel.Controls.Add(ms);
             ms.Show();
+        }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            th = new Thread(openMainForm);
+            th.SetApartmentState(ApartmentState.STA);
+            th.Start();
+        }
+
+        private void openMainForm()
+        {
+            Application.Run(new Main());
         }
     }
 }

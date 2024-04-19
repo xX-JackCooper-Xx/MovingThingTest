@@ -33,6 +33,7 @@
             LoadBtn = new Button();
             controlsPanel = new Panel();
             timer1 = new System.Windows.Forms.Timer(components);
+            exitBtn = new Button();
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -41,6 +42,7 @@
             mapPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             mapPanel.AutoSize = true;
             mapPanel.BackColor = Color.Green;
+            mapPanel.Controls.Add(exitBtn);
             mapPanel.Controls.Add(LoadBtn);
             mapPanel.Location = new Point(0, 0);
             mapPanel.Margin = new Padding(0);
@@ -76,6 +78,17 @@
             timer1.Interval = 50;
             timer1.Tick += timer1_Tick;
             // 
+            // exitBtn
+            // 
+            exitBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            exitBtn.Location = new Point(86, 416);
+            exitBtn.Name = "exitBtn";
+            exitBtn.Size = new Size(75, 23);
+            exitBtn.TabIndex = 16;
+            exitBtn.Text = "Exit";
+            exitBtn.UseVisualStyleBackColor = true;
+            exitBtn.Click += exitBtn_Click;
+            // 
             // PlayerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -100,5 +113,6 @@
         private Panel controlsPanel;
         private System.Windows.Forms.Timer timer1;
         private Button LoadBtn;
+        private Button exitBtn;
     }
 }
