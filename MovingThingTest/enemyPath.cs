@@ -11,10 +11,10 @@ namespace MovingThingTest
 {
     public class enemyPath
     {
-        protected List<Cell> pathAnchors = new List<Cell>();
-        protected List<dynamic> pathCellsLists = new List<dynamic>();
+        public List<Cell> pathAnchors = new List<Cell>();
+        public List<dynamic> pathCellsLists = new List<dynamic>();
         Stack<Cell> path = new Stack<Cell>();
-        protected bool loop;
+        public bool loop;
         public SolidBrush brush = new SolidBrush(Color.Red);
         public Color color = Color.Red;
 

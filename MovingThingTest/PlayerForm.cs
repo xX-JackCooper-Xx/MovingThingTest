@@ -8,18 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Windows.ApplicationModel.VoiceCommands;
-using Windows.Media.Playback;
-
 namespace MovingThingTest
 {
     public partial class PlayerForm : Form
     {
         string filePath;
-        public Type item;
+        public string item;
         public int pathNum;
         MenuSelector ms = new MenuSelector("play");
         PlayerControl pc = new PlayerControl();
+
         public PlayerForm()
         {
             InitializeComponent();
@@ -53,6 +51,12 @@ namespace MovingThingTest
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if(ms.pathNumber != pathNum)
+            {
+                pathNum = ms.pathNumber;
+                pc.squad.changeFormation(pathNum, pc.grid);
+            }
+
         }
         private void MapMaker_KeyDown(object sender, KeyEventArgs e)
         {
@@ -87,6 +91,7 @@ namespace MovingThingTest
             int row;
             int col;
             Grid grid;
+            Cell spawnCell = new Cell();
             List<enemyPath> enemyPaths = new List<enemyPath>();
             using (StreamReader sr = new StreamReader(filePath))
             {
@@ -96,7 +101,7 @@ namespace MovingThingTest
 
                 grid = new Grid(mapPanel.Width, mapPanel.Height, row, col);
                 grid.createGrid();
-
+                spawnCell = grid.cellArr[1, 1];
                 for (int i = 0; i < col; i++)
                 {
                     line = sr.ReadLine();
@@ -117,6 +122,10 @@ namespace MovingThingTest
                                 break;
                             case "003":
                                 grid.cellArr[i, j] = grid.cellArr[i, j].toBorder();
+                                break;
+                            case "101":
+                                grid.cellArr[i, j] = grid.cellArr[i, j].toSpawn();
+                                spawnCell = grid.cellArr[i, j] = grid.cellArr[i, j];
                                 break;
                         }
                         j++;
@@ -166,11 +175,13 @@ namespace MovingThingTest
             }
 
 
-            pc = new PlayerControl(filePath, grid, enemyPaths);
+            pc = new PlayerControl(filePath, grid, enemyPaths, spawnCell);
             pc.AutoScroll = true;
             pc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(pc);
             pc.Show();
+
+
 
             ms = new MenuSelector(enemyPaths, "play");
             ms.AutoScroll = true;

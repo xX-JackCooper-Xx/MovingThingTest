@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -19,7 +20,8 @@ namespace MovingThingTest
         List<int> formationDirections = new List<int>();
         int direction = 0;
         List<Stack<Cell>> cellStacks = new List<Stack<Cell>>();
-        string formation = "wedge";
+        public string formation = "herringbone";
+        string[] formations = { "herringbone", "wedge" };
 
         public Squad(Cell currentCell, Grid grid, int size)
         {
@@ -38,7 +40,7 @@ namespace MovingThingTest
 
         }
 
-        public void updatePos(Stack<Cell> cellStack, Grid grid)
+        public void updatePos(Stack<Cell> cellStack, Grid grid, List<Enemy> enemies)
         {
             if(currentCell.gridCoord != gridCoord)
             {
@@ -62,9 +64,14 @@ namespace MovingThingTest
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
 
 
-            updateUnits(grid);
+            updateUnits(grid, enemies);
         }
 
+        public void changeFormation(int i, Grid grid)
+        {
+            formation = formations[i];
+            loadFormation(formation, grid);
+        }
 
         public void drawSquad(PaintEventArgs e, Grid grid, float size)
         {
@@ -128,21 +135,108 @@ namespace MovingThingTest
                     formationDirectionsTemp.Add(direction);
                     formationDirectionsTemp.Add((direction + 1) % 4);
 
-                    for(int i = 0; i < targetCells.Count()-2; i++){
+                    for (int i = 0; i < targetCells.Count() - 2; i++)
+                    {
                         targetCellsTemp.Add(targetCells[i]);
                     }
 
-                    for(int i = 1; i < formationDirections.Count()-2; i++)
+                    for (int i = 1; i < formationDirections.Count() - 2; i++)
                     {
                         formationDirectionsTemp.Add((formationDirectionsTemp[i] + 2) % 4);
                     }
 
                     targetCellsTemp.Add(targetCells[targetCells.Count - 2]);
-                    formationDirectionsTemp.Add((direction+2)%4);
+                    formationDirectionsTemp.Add((direction + 2) % 4);
                     //targetCells.Add(grid.cellArr[currentCell.col - (int)directionVec.X * (units.Count-1), currentCell.row - (int)directionVec.Y * (units.Count-1)]);
                     //formationDirections.Add((direction + 2) % 4);
                     targetCells = targetCellsTemp;
                     formationDirections = formationDirectionsTemp;
+                    break;
+                case "wedge":
+                    targetCells = new List<Cell>();
+                    formationDirections = new List<int>();
+                    targetCells.Add(currentCell);
+                    foreach (Soldier s in units)
+                    {
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                    }
+
+                    Vector2 behind = getVecfromDirection((direction + 2) % 4);
+                    Vector2 left = getVecfromDirection((direction + 3) % 4);
+                    Vector2 right = getVecfromDirection((direction + 1) % 4);
+                    Vector2 infront = getVecfromDirection(direction);
+
+                    Cell nextCell = grid.cellArr[currentCell.col + (int)(behind.X + left.X), currentCell.row + (int)(behind.Y + left.Y)];
+                    Cell infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+                    Cell insideNextCell = grid.cellArr[nextCell.col + (int)right.X, nextCell.row + (int)right.Y];
+
+                    if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+                    {
+                        targetCells.Add(nextCell);
+                    }
+                    else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                    {
+                        targetCells.Add(currentCell);
+                    }
+                    else if (infrontNextCell.permeable == 0)
+                    {
+                        targetCells.Add(insideNextCell);
+                    }
+                    else
+                    {
+                        targetCells.Add(infrontNextCell);
+                    }
+
+                    nextCell = grid.cellArr[currentCell.col + (int)(behind.X + right.X), currentCell.row + (int)(behind.Y + right.Y)];
+                    infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+                    insideNextCell = grid.cellArr[nextCell.col + (int)left.X, nextCell.row + (int)left.Y];
+
+                    if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+                    {
+                        targetCells.Add(nextCell);
+                    }
+                    else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                    {
+                        targetCells.Add(currentCell);
+                    }
+                    else if (infrontNextCell.permeable == 0)
+                    {
+                        targetCells.Add(insideNextCell);
+                    }
+                    else
+                    {
+                        targetCells.Add(infrontNextCell);
+                    }
+
+                    int max = (int)Math.Ceiling(units.Count / 2f);
+                    for (int i = 1; i < max; i++)
+                    {
+                        int insideMult = ((2 * i) % 4) - 1;
+                        nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X - right.X * insideMult), targetCells[i].row + (int)(behind.Y - right.Y * insideMult)];
+                        infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
+                        insideNextCell = grid.cellArr[nextCell.col + (int)(right.X * insideMult), nextCell.row + (int)(right.Y * insideMult)];
+                        if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+                        {
+                            targetCells.Add(nextCell);
+                        }
+                        else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                        {
+                            targetCells.Add(currentCell);
+                        }
+                        else if (infrontNextCell.permeable == 0)
+                        {
+                            targetCells.Add(insideNextCell);
+                        }
+                        else
+                        {
+                            targetCells.Add(infrontNextCell);
+                        }
+                    }
+
                     break;
             }
         }
@@ -184,12 +278,20 @@ namespace MovingThingTest
                         }
                         formationDirections.Add((direction + 2 * i - 1) % 4);
                     }
+                    formationDirections[formationDirections.Count - 1] = (direction + 2) % 4;
+
 
                     break;
                 case "wedge":
                     targetCells.Add(currentCell);
-                    formationDirections.Add(direction);
-
+                    foreach (Soldier s in units)
+                    {
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                        formationDirections.Add(direction);
+                    }
                     Vector2 behind = getVecfromDirection((direction + 2) % 4);
                     Vector2 left = getVecfromDirection((direction + 3 ) % 4);
                     Vector2 right = getVecfromDirection((direction + 1) % 4);
@@ -238,19 +340,35 @@ namespace MovingThingTest
                     }
 
                     int max = (int)Math.Ceiling(units.Count / 2f);
-                    for(int i = 2; i < max; i++)
+                    for(int i = 1; i < max; i++)
                     {
                         int insideMult = ((2*i)%4)-1;
-                        nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X + right.X * insideMult), targetCells[i].row + (int)(behind.Y + right.Y * insideMult)];
+                        nextCell = grid.cellArr[targetCells[i].col + (int)(behind.X  - right.X * insideMult), targetCells[i].row + (int)(behind.Y - right.Y * insideMult)];
                         infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
-                        insideNextCell = grid.cellArr[targetCells[i].col + (int)(behind.X + right.X * insideMult), targetCells[i].row + (int)(behind.Y + right.Y * insideMult)];
+                        insideNextCell = grid.cellArr[nextCell.col + (int)(right.X * insideMult), nextCell.row + (int)(right.Y * insideMult)];
+                        if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
+                        {
+                            targetCells.Add(nextCell);
+                        }
+                        else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                        {
+                            targetCells.Add(currentCell);
+                        }
+                        else if (infrontNextCell.permeable == 0)
+                        {
+                            targetCells.Add(insideNextCell);
+                        }
+                        else
+                        {
+                            targetCells.Add(infrontNextCell);
+                        }
                     }
 
                     break;
             }
         }
 
-        public void updateUnits(Grid grid)
+        public void updateUnits(Grid grid, List<Enemy> enemies)
         {
             int i = 0;
             foreach (Soldier s in units)
@@ -260,10 +378,12 @@ namespace MovingThingTest
                     cellStacks[i] = grid.PathFind(grid, s.currentCell, targetCells[i]);
                     grid.resetPathFind();
                 }
-                s.updatePos(cellStacks[i]);
+                s.updatePos(cellStacks[i], 0.1f, 1);
                 s.direction = formationDirections[i];
                 i++;
+                s.checkForEnemy(enemies, grid);
             }
+            
         }
 
         public void drawUnits(PaintEventArgs e, Grid grid, float size)

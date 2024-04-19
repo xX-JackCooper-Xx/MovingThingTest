@@ -21,7 +21,7 @@ namespace MovingThingTest
         public bool cameraLock = false;
         public List<enemyPath> enemyPaths = new List<enemyPath>();
         public Stack<Cell> cellStack = new Stack<Cell>();
-
+        public List<Enemy> enemies = new List<Enemy>();
         public bool drag = false;
         public Vector2 mouseDownGridCoord;
 
@@ -38,20 +38,34 @@ namespace MovingThingTest
             squad = new Squad(grid.cellArr[1, 1], grid, 5);
         }
 
-        public PlayerControl(string filePath, Grid grid, List<enemyPath> enemyPaths)
+        public PlayerControl(string filePath, Grid grid, List<enemyPath> enemyPaths, Cell spawnCell)
         {
             InitializeComponent();
             this.filePath = filePath;
             this.grid = grid;
             this.enemyPaths = enemyPaths;
-            squad = new Squad(grid.cellArr[1, 1], grid, 5);
+            loadEnemies(enemyPaths);
+            squad = new Squad(spawnCell, grid, 5);
+        }
+
+        public void loadEnemies(List<enemyPath> enemyPaths)
+        {
+            foreach (enemyPath path in enemyPaths)
+            {
+                enemies.Add(new Enemy(path));
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             grid.updateScreenSize(Width, Height);
             //box.UpdatePos(grid, grid.pathStack);
-            squad.updatePos(cellStack, grid);
+
+            foreach(Enemy enemy in enemies)
+            {
+                enemy.updatePos();
+            }
+            squad.updatePos(cellStack, grid, enemies);
             pictureBox1.Invalidate();
         }
 
@@ -62,8 +76,6 @@ namespace MovingThingTest
 
             modeButton.Text = names[mode];
         }
-
-
 
 
 
@@ -84,6 +96,10 @@ namespace MovingThingTest
             grid.drawGrid(e);
             //box.drawBox(e, grid);
             squad.drawSquad(e, grid, grid.cellSize);
+            foreach(Enemy enemy in enemies)
+            {
+                enemy.drawSoldier(e, grid, grid.cellSize);
+            }
             //box.vision(grid, e);
             //box.drawVisionCone(grid, e);
             //grid.drawWalls(e);

@@ -172,6 +172,10 @@ namespace MovingThingTest
                             {
                                 pathNumber = s - 1;
                             }
+                            if (selectedItem.Name == "String")
+                            {
+                                pathNumber = s;
+                            }
                         }
 
                         break;

@@ -11,11 +11,11 @@ namespace MovingThingTest
     {
         public Cell currentCell;
         public Vector2 gridCoord;
-        Vector2 movingVec = new Vector2(0, 0);
-        Vector2 centerCoord;
-        List<Cell> targetCells = new List<Cell>();
+        protected Vector2 movingVec = new Vector2(0, 0);
+        protected Vector2 centerCoord;
         public int direction = 0;
-
+        protected Color color = Color.Red;
+        Ray viewRay = new Ray();
         public Soldier(Cell currentCell)
         {
             this.currentCell = currentCell;
@@ -23,12 +23,12 @@ namespace MovingThingTest
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
         }
 
-        public void updatePos(Stack<Cell> cellStack)
+        public void updatePos(Stack<Cell> cellStack, float speed, int i)
         {
             if (currentCell.gridCoord != gridCoord)
             {
                 gridCoord += movingVec;
-                gridCoord = new Vector2(MathF.Round(gridCoord.X, 1), MathF.Round(gridCoord.Y, 1));
+                gridCoord = new Vector2(MathF.Round(gridCoord.X, i), MathF.Round(gridCoord.Y, i));
             }
             else if (cellStack.Count > 0)
             {
@@ -37,7 +37,7 @@ namespace MovingThingTest
                 {
                     currentCell = cellStack.Pop();
                 }
-                movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * 0.1f;
+                movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * speed;
                 gridCoord += movingVec;
             }
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
@@ -45,11 +45,32 @@ namespace MovingThingTest
 
         public void drawSoldier(PaintEventArgs e, Grid grid, float size)
         { 
-            SolidBrush brush = new SolidBrush(Color.Red);
+            SolidBrush brush = new SolidBrush(color);
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
             e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
             Ray ray = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
             ray.drawRay(e, topLeft, size);
+        }
+
+        public void checkForEnemy(List<Enemy> enemies, Grid grid)
+        {
+            foreach(Enemy enemy in enemies)
+            {
+                float distanceX = Math.Abs(enemy.centerCoord.X - centerCoord.X);
+                float distanceY = Math.Abs(enemy.centerCoord.Y - centerCoord.Y);
+                float distance = MathF.Sqrt(distanceY * distanceY + distanceX * distanceX);
+                double angle = MathF.Atan(distanceY / distanceX);
+                if (distance <= 5 && distance > 0)
+                {
+                    Ray ray = Ray.castRay(grid, centerCoord, angle);
+                    Vector2 rayVector = ray.endPos - ray.startPos;
+                    float rayVectorLength = MathF.Sqrt(rayVector.X * rayVector.X + rayVector.Y * rayVector.Y);
+                    if (rayVectorLength >= distance)
+                    {
+                        enemy.shooting = true;
+                    }
+                }
+            }
         }
     }
 }
