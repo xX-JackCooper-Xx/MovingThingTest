@@ -108,6 +108,7 @@
             Controls.Add(button2);
             Controls.Add(button1);
             Name = "Main";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Main";
             Load += Main_Load;
             ResumeLayout(false);

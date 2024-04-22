@@ -77,8 +77,8 @@ namespace MovingThingTest
         {
             //SolidBrush brush = new SolidBrush(Color.Yellow);
             //Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-            //e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
-            //Ray ray = Ray.castRay(grid, centerCoord, direction*Math.PI/2-Math.PI/2);
+            //e.Graphics.FillRectangle(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
+            //Ray ray = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
             //ray.drawRay(e, topLeft, size);
             drawUnits(e, grid, size);
         }
@@ -145,6 +145,10 @@ namespace MovingThingTest
                         formationDirectionsTemp.Add((formationDirectionsTemp[i] + 2) % 4);
                     }
 
+                    if(targetCells.Count < 2)
+                    {
+                        break;
+                    }
                     targetCellsTemp.Add(targetCells[targetCells.Count - 2]);
                     formationDirectionsTemp.Add((direction + 2) % 4);
                     //targetCells.Add(grid.cellArr[currentCell.col - (int)directionVec.X * (units.Count-1), currentCell.row - (int)directionVec.Y * (units.Count-1)]);

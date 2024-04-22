@@ -17,9 +17,6 @@ namespace MovingThingTest
     public partial class MapMakerControl : UserControl
     {
 
-        string filePath;
-        bool saved;
-
         public Grid grid;
         public List<enemyPath> enemyPaths = new List<enemyPath>();
         public int pathNumber = 0;
@@ -44,7 +41,6 @@ namespace MovingThingTest
         public MapMakerControl(string filePath, Grid grid, List<enemyPath> enemyPaths)
         {
             InitializeComponent();
-            this.filePath = filePath;
             this.grid = grid;
             this.enemyPaths = enemyPaths;
         }
@@ -68,89 +64,6 @@ namespace MovingThingTest
             modeButton.Text = names[mode];
         }
 
-        private void Save_Click(object sender, EventArgs e)
-        {
-            //if (!savedAs)
-            //{
-            //    Save.BackColor = Color.Blue;
-            //    SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //    saveFileDialog.DefaultExt = "txt";
-            //    if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //    {
-            //        filePath = saveFileDialog.FileName;
-
-            //        saveFile();
-            //        savedAs = true;
-            //        saved = true;
-            //    }
-            //    Save.BackColor = Color.Green;
-            //}
-            //else if (!saved)
-            //{
-            //    saveFile();
-            //    saved = true;
-            //    Save.BackColor = Color.Green;
-            //}
-        }
-
-        private void LoadBtn_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.DefaultExt = "txt";
-            openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                filePath = openFileDialog.FileName;
-                loadFile();
-            }
-        }
-
-        private void loadFile()
-        {
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-
-            }
-        }
-
-        private void saveFile()
-        {
-            using (StreamWriter sw = new StreamWriter(filePath))
-            {
-                sw.Write(grid.cols.ToString());
-                sw.Write(",");
-                sw.Write(grid.rows.ToString());
-                sw.Write('\n');
-                for (int i = 0; i < grid.cols; i++)
-                {
-                    for (int j = 0; j < grid.rows; j++)
-                    {
-                        sw.Write(grid.cellArr[i, j].ID.ToString().PadLeft(3, '0'));
-                    }
-                    sw.Write('\n');
-                }
-                sw.Write('\n');
-                sw.Write('\n');
-                foreach (enemyPath ep in enemyPaths)
-                {
-                    sw.Write(ep.saveString());
-                    sw.Write("\n");
-                }
-            }
-            //Save.BackColor = Color.Blue;
-            //using (StreamWriter sw = new StreamWriter("P:\\6th Form Computing\\17ParkinsonM\\NEA-File_Save\\saveFile.txt"))
-            //{
-            //    for (int i = 0; i < grid.cols; i++)
-            //    {
-            //        for (int j = 0; j < grid.rows; j++)
-            //        {
-            //            sw.Write(grid.cellArr[i, j].ID.ToString().PadLeft(3, '0'));
-            //        }
-            //        sw.Write('\n');
-            //    }
-            //    Save.BackColor = Color.Green;
-            //}
-        }
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             bool valid = true;
@@ -210,8 +123,6 @@ namespace MovingThingTest
             switch (mode)
             {
                 case 0:
-                    saved = false;
-                    //Save.BackColor = Color.Blue;
                     place = true;
                     break;
                 case 1:
@@ -241,17 +152,5 @@ namespace MovingThingTest
             grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
             grid.cellSize = grid.calculateCellSize();
         }
-
-        private void MapMakerControl_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void MapMakerControl_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
-
     }
 }

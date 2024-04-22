@@ -111,6 +111,7 @@
             Controls.Add(mapPanel);
             IsMdiContainer = true;
             Name = "MapMaker";
+            StartPosition = FormStartPosition.CenterScreen;
             Load += MapMaker_Load;
             KeyDown += MapMaker_KeyDown;
             KeyPress += MapMaker_KeyPress;

@@ -76,8 +76,6 @@
             Name = "MapMakerControl";
             Size = new Size(800, 450);
             Load += UserControl1_Load;
-            KeyDown += MapMakerControl_KeyDown;
-            KeyUp += MapMakerControl_KeyUp;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

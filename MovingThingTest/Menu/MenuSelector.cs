@@ -39,6 +39,22 @@ namespace MovingThingTest
 
         }
 
+        public MenuSelector(List<enemyPath> ep, string form)
+        {
+            InitializeComponent();
+            switch (form)
+            {
+                case "map":
+                    loadMap(ep);
+                    break;
+                case "play":
+                    play();
+                    break;
+
+            }
+
+        }
+
         public void createMap()
         {
             tabLists.Add(new List<Cell>() { new Cell().toWall(), new Cell().toGrass(), new Cell().toDirt() });
@@ -110,21 +126,7 @@ namespace MovingThingTest
             menuTabs.Add(formations);
         }
 
-        public MenuSelector(List<enemyPath> ep, string form)
-        {
-            InitializeComponent();
-            switch (form)
-            {
-                case "map":
-                    loadMap(ep);
-                    break;
-                case "play":
-                    play();
-                    break;
 
-            }
-
-        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {

@@ -30,10 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             mapPanel = new Panel();
+            exitBtn = new Button();
             LoadBtn = new Button();
             controlsPanel = new Panel();
             timer1 = new System.Windows.Forms.Timer(components);
-            exitBtn = new Button();
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,6 +50,17 @@
             mapPanel.Size = new Size(500, 450);
             mapPanel.TabIndex = 3;
             mapPanel.Paint += panel1_Paint;
+            // 
+            // exitBtn
+            // 
+            exitBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            exitBtn.Location = new Point(86, 416);
+            exitBtn.Name = "exitBtn";
+            exitBtn.Size = new Size(75, 23);
+            exitBtn.TabIndex = 16;
+            exitBtn.Text = "Exit";
+            exitBtn.UseVisualStyleBackColor = true;
+            exitBtn.Click += exitBtn_Click;
             // 
             // LoadBtn
             // 
@@ -78,17 +89,6 @@
             timer1.Interval = 50;
             timer1.Tick += timer1_Tick;
             // 
-            // exitBtn
-            // 
-            exitBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            exitBtn.Location = new Point(86, 416);
-            exitBtn.Name = "exitBtn";
-            exitBtn.Size = new Size(75, 23);
-            exitBtn.TabIndex = 16;
-            exitBtn.Text = "Exit";
-            exitBtn.UseVisualStyleBackColor = true;
-            exitBtn.Click += exitBtn_Click;
-            // 
             // PlayerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -98,6 +98,7 @@
             Controls.Add(mapPanel);
             IsMdiContainer = true;
             Name = "PlayerForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Load += MapMaker_Load;
             KeyDown += MapMaker_KeyDown;
             KeyPress += MapMaker_KeyPress;
