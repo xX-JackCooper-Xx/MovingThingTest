@@ -291,9 +291,9 @@ namespace MovingThingTest
                 {
                     targetCells.Add(nextCell);
                 }
-                else if (nextCell.permeable == 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
+                else if (nextCell.permeable != 0 && infrontNextCell.permeable == 0 && insideNextCell.permeable == 0)
                 {
-                    targetCells.Add(currentCell);
+                    targetCells.Add(grid.cellArr[nextCell.col + (int)(infront.X + right.X *insideMult), nextCell.row + (int)(infront.Y + right.Y * insideMult)]);
                 }
                 else if (infrontNextCell.permeable == 0)
                 {
