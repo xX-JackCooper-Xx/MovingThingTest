@@ -76,9 +76,9 @@ namespace MovingThingTest
             if (place)
             {
                 Cell targetCell = new Cell();
-                targetCell.toBorder();
+                targetCell = targetCell.toBorder();
                 Vector2 targetGridCoord = grid.getCellCoordFromPoint(PointToClient(new Point((int)MousePosition.X, (int)MousePosition.Y)));
-                if (targetGridCoord.X >= 0 && targetGridCoord.Y >= 0 && targetGridCoord.X < grid.cols && targetGridCoord.Y < grid.rows)
+                if (targetGridCoord.X > 0 && targetGridCoord.Y > 0 && targetGridCoord.X < grid.cols && targetGridCoord.Y < grid.rows)
                 {
                     targetCell = grid.cellArr[(int)targetGridCoord.X, (int)targetGridCoord.Y];
                 }

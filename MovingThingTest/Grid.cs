@@ -333,6 +333,10 @@ namespace MovingThingTest
             }
             catch { }
 
+            if(openList.Count == 0)
+            {
+                return pathStack;
+            }
 
             if (pathStack.Count == 0)
             {
