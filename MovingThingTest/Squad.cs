@@ -145,12 +145,16 @@ namespace MovingThingTest
                         formationDirectionsTemp.Add((formationDirectionsTemp[i] + 2) % 4);
                     }
 
-                    if(targetCells.Count < 2)
+                    if(targetCells.Count > 1)
                     {
-                        break;
+                        targetCellsTemp.Add(targetCells[targetCells.Count - 2]);
+                        formationDirectionsTemp.Add((direction + 2) % 4);
                     }
-                    targetCellsTemp.Add(targetCells[targetCells.Count - 2]);
-                    formationDirectionsTemp.Add((direction + 2) % 4);
+                    if(targetCells.Count == 2)
+                    {
+                        formationDirectionsTemp.RemoveRange(1, 2);
+                        formationDirectionsTemp.Add(((direction + 2) % 4));
+                    }
                     //targetCells.Add(grid.cellArr[currentCell.col - (int)directionVec.X * (units.Count-1), currentCell.row - (int)directionVec.Y * (units.Count-1)]);
                     //formationDirections.Add((direction + 2) % 4);
                     targetCells = targetCellsTemp;
@@ -233,6 +237,10 @@ namespace MovingThingTest
             Cell infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
             Cell insideNextCell = grid.cellArr[nextCell.col + (int)right.X, nextCell.row + (int)right.Y];
 
+            if(units.Count == 1)
+            {
+                return;
+            }
             if (nextCell.permeable != 0 && !(infrontNextCell.permeable == 0 && insideNextCell.permeable == 0))
             {
                 targetCells.Add(nextCell);
@@ -249,6 +257,8 @@ namespace MovingThingTest
             {
                 targetCells.Add(infrontNextCell);
             }
+
+            if (units.Count == 2) { return; }
 
             nextCell = grid.cellArr[currentCell.col + (int)(behind.X + right.X), currentCell.row + (int)(behind.Y + right.Y)];
             infrontNextCell = grid.cellArr[nextCell.col + (int)infront.X, nextCell.row + (int)infront.Y];
@@ -270,7 +280,6 @@ namespace MovingThingTest
             {
                 targetCells.Add(infrontNextCell);
             }
-
             int max = units.Count - 2;
             for (int i = 1; i < max; i++)
             {

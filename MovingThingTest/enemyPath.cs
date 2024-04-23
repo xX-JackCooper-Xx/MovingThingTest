@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.VoiceCommands;
 using System.Numerics;
-using Windows.ApplicationModel.Email.DataProvider;
+
 
 namespace MovingThingTest
 {
