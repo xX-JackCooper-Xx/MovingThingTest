@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Windows.Media.Playback;
 
 namespace MovingThingTest
 {
@@ -21,11 +20,6 @@ namespace MovingThingTest
         {
             Focus();
             InitializeComponent();
-        }
-
-        private void Main_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void newMapBtn_Click(object sender, EventArgs e)

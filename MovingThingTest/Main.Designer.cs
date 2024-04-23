@@ -110,7 +110,6 @@
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Main";
-            Load += Main_Load;
             ResumeLayout(false);
             PerformLayout();
         }

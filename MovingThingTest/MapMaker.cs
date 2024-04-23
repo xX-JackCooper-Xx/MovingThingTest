@@ -44,7 +44,7 @@ namespace MovingThingTest
         }
 
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             item = ms.selectedItem;
             if (item.Name == "enemyPath")

@@ -34,7 +34,7 @@
             LoadBtn = new Button();
             Save = new Button();
             controlsPanel = new Panel();
-            timer1 = new System.Windows.Forms.Timer(components);
+            timer = new System.Windows.Forms.Timer(components);
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -94,11 +94,11 @@
             controlsPanel.Size = new Size(300, 450);
             controlsPanel.TabIndex = 5;
             // 
-            // timer1
+            // timer
             // 
-            timer1.Enabled = true;
-            timer1.Interval = 50;
-            timer1.Tick += timer1_Tick;
+            timer.Enabled = true;
+            timer.Interval = 50;
+            timer.Tick += timer_Tick;
             // 
             // MapMaker
             // 
@@ -120,7 +120,7 @@
 
         private Panel mapPanel;
         private Panel controlsPanel;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer;
         private Button LoadBtn;
         private Button Save;
         private Button exitBtn;
