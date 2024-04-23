@@ -28,7 +28,7 @@ namespace MovingThingTest
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void newMapBtn_Click(object sender, EventArgs e)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace MovingThingTest
             Application.Run(new PlayerForm(squadSize));
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void playBtn_Click(object sender, EventArgs e)
         {
             try
             {

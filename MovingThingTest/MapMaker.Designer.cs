@@ -51,7 +51,6 @@
             mapPanel.Name = "mapPanel";
             mapPanel.Size = new Size(500, 450);
             mapPanel.TabIndex = 3;
-            mapPanel.Paint += panel1_Paint;
             // 
             // exitBtn
             // 
@@ -94,7 +93,6 @@
             controlsPanel.Name = "controlsPanel";
             controlsPanel.Size = new Size(300, 450);
             controlsPanel.TabIndex = 5;
-            controlsPanel.Paint += controlsPanel_Paint;
             // 
             // timer1
             // 
@@ -113,9 +111,6 @@
             Name = "MapMaker";
             StartPosition = FormStartPosition.CenterScreen;
             Load += MapMaker_Load;
-            KeyDown += MapMaker_KeyDown;
-            KeyPress += MapMaker_KeyPress;
-            KeyUp += MapMaker_KeyUp;
             mapPanel.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();

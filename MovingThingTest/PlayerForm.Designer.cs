@@ -33,7 +33,7 @@
             exitBtn = new Button();
             LoadBtn = new Button();
             controlsPanel = new Panel();
-            timer1 = new System.Windows.Forms.Timer(components);
+            timer = new System.Windows.Forms.Timer(components);
             mapPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -49,7 +49,6 @@
             mapPanel.Name = "mapPanel";
             mapPanel.Size = new Size(500, 450);
             mapPanel.TabIndex = 3;
-            mapPanel.Paint += panel1_Paint;
             // 
             // exitBtn
             // 
@@ -81,13 +80,12 @@
             controlsPanel.Name = "controlsPanel";
             controlsPanel.Size = new Size(300, 450);
             controlsPanel.TabIndex = 5;
-            controlsPanel.Paint += controlsPanel_Paint;
             // 
-            // timer1
+            // timer
             // 
-            timer1.Enabled = true;
-            timer1.Interval = 50;
-            timer1.Tick += timer1_Tick;
+            timer.Enabled = true;
+            timer.Interval = 50;
+            timer.Tick += timer_Tick;
             // 
             // PlayerForm
             // 
@@ -100,9 +98,6 @@
             Name = "PlayerForm";
             StartPosition = FormStartPosition.CenterScreen;
             Load += MapMaker_Load;
-            KeyDown += MapMaker_KeyDown;
-            KeyPress += MapMaker_KeyPress;
-            KeyUp += MapMaker_KeyUp;
             mapPanel.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -112,7 +107,7 @@
 
         private Panel mapPanel;
         private Panel controlsPanel;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer;
         private Button LoadBtn;
         private Button exitBtn;
     }

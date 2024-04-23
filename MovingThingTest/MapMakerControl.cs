@@ -44,16 +44,10 @@ namespace MovingThingTest
             this.grid = grid;
             this.enemyPaths = enemyPaths;
         }
-
-        private void UserControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             grid.updateScreenSize(Width, Height);
-            pictureBox1.Invalidate();
+            pictureBox.Invalidate();
         }
 
         private void modeButton_Click(object sender, EventArgs e)
@@ -64,7 +58,7 @@ namespace MovingThingTest
             modeButton.Text = names[mode];
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
             bool valid = true;
             Vector2 mouseMove = new Vector2((MousePosition.X - mouseDownGridCoord.X) / grid.cellSize, (MousePosition.Y - mouseDownGridCoord.Y) / grid.cellSize);
@@ -108,16 +102,9 @@ namespace MovingThingTest
             {
                 P.drawPath(e, topLeft, grid.cellSize, Font);
             }
-            //box.vision(grid, e);
-            //box.drawVisionCone(grid, e);
-            //grid.drawWalls(e);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
 
             switch (mode)
@@ -133,7 +120,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             if (mode == 0)
             {
@@ -146,7 +133,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
+        private void pictureBox_MouseWheel(object sender, MouseEventArgs e)
         {
             grid.cameraSize.Y = grid.cameraSize.Y * 1 - e.Delta / 200f;
             grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;

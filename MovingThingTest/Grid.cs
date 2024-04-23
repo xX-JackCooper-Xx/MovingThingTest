@@ -82,11 +82,6 @@ namespace MovingThingTest
         
         public void updateScreenSize(int width, int height)
         {
-            //cameraSize.Y += (height - screenSize.Height) / cellSize;
-            //float screenSizeRatio = (float)width / (float)height;
-            //cameraSize.X = screenSizeRatio * cameraSize.Y;
-            //screenSize.Width = width;
-            //screenSize.Height = height;
 
             float changeWidth = (width - screenSize.Width) / cellSize;
             float changeHeight = (height - screenSize.Height) / cellSize;
@@ -162,11 +157,6 @@ namespace MovingThingTest
                     }
                 }
             }
-
-            //foreach(Cell cell in cellArr)
-            //{
-            //    cell.drawCell(e);
-            //}
         }
 
         public Vector2 getGridCoordFromPoint(Point clickPos)
@@ -301,7 +291,6 @@ namespace MovingThingTest
                         {
                             openList.Add(neighbour);
 
-                            //neighbour.color = Color.Blue;
                             neighbour.pathParent = currentCell;
                             neighbour.pathCostG = currentCell.pathCostG + (1 * (1 / currentCell.permeable));
 

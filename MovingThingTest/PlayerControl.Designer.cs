@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            timer1 = new System.Windows.Forms.Timer(components);
+            timer = new System.Windows.Forms.Timer(components);
             modeButton = new Button();
-            pictureBox1 = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            pictureBox = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             SuspendLayout();
             // 
-            // timer1
+            // timer
             // 
-            timer1.Enabled = true;
-            timer1.Interval = 10;
-            timer1.Tick += timer1_Tick;
+            timer.Enabled = true;
+            timer.Interval = 10;
+            timer.Tick += timer1_Tick;
             // 
             // modeButton
             // 
@@ -51,19 +51,19 @@
             modeButton.UseVisualStyleBackColor = true;
             modeButton.Click += modeButton_Click;
             // 
-            // pictureBox1
+            // pictureBox
             // 
-            pictureBox1.Dock = DockStyle.Fill;
-            pictureBox1.Location = new Point(0, 0);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(800, 450);
-            pictureBox1.TabIndex = 12;
-            pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
-            pictureBox1.Paint += pictureBox1_Paint;
-            pictureBox1.MouseDown += pictureBox1_MouseDown;
-            pictureBox1.MouseUp += pictureBox1_MouseUp;
-            pictureBox1.MouseWheel += pictureBox1_MouseWheel;
+            pictureBox.Dock = DockStyle.Fill;
+            pictureBox.Location = new Point(0, 0);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(800, 450);
+            pictureBox.TabIndex = 12;
+            pictureBox.TabStop = false;
+            pictureBox.Click += pictureBox_Click;
+            pictureBox.Paint += pictureBox_Paint;
+            pictureBox.MouseDown += pictureBox_MouseDown;
+            pictureBox.MouseUp += pictureBox_MouseUp;
+            pictureBox.MouseWheel += pictureBox_MouseWheel;
             // 
             // PlayerControl
             // 
@@ -72,17 +72,17 @@
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.Green;
             Controls.Add(modeButton);
-            Controls.Add(pictureBox1);
+            Controls.Add(pictureBox);
             Name = "PlayerControl";
             Size = new Size(800, 450);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer;
         private Button modeButton;
-        private PictureBox pictureBox1;
+        private PictureBox pictureBox;
     }
 }

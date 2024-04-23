@@ -42,36 +42,13 @@ namespace MovingThingTest
             ms.Show();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void controlsPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             if (ms.pathNumber != pathNum)
             {
                 pathNum = ms.pathNumber;
                 pc.squad.changeFormation(pathNum, pc.grid);
             }
-
-        }
-        private void MapMaker_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void MapMaker_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void MapMaker_KeyPress(object sender, KeyPressEventArgs e)
-        {
 
         }
 

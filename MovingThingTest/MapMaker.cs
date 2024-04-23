@@ -43,15 +43,6 @@ namespace MovingThingTest
             ms.Show();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void controlsPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -74,19 +65,6 @@ namespace MovingThingTest
                 uc.pathNumber = ms.pathNumber;
             }
             uc.item = item;
-        }
-        private void MapMaker_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void MapMaker_KeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void MapMaker_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -233,9 +211,6 @@ namespace MovingThingTest
                     enemyPaths.Add(new existingEnemyPath(loop, pathAnchors, pathCellsLists, color));
 
                 }
-
-
-
 
             }
 

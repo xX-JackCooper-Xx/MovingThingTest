@@ -28,35 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            button2 = new Button();
+            neMapBtn = new Button();
+            playBtn = new Button();
             label1 = new Label();
             widthBox = new TextBox();
             heightBox = new TextBox();
             squadBox = new TextBox();
             SuspendLayout();
             // 
-            // button1
+            // neMapBtn
             // 
-            button1.Anchor = AnchorStyles.Top;
-            button1.Location = new Point(512, 161);
-            button1.Name = "button1";
-            button1.Size = new Size(147, 23);
-            button1.TabIndex = 1;
-            button1.Text = "Create New Map";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            neMapBtn.Anchor = AnchorStyles.Top;
+            neMapBtn.Location = new Point(512, 161);
+            neMapBtn.Name = "neMapBtn";
+            neMapBtn.Size = new Size(147, 23);
+            neMapBtn.TabIndex = 1;
+            neMapBtn.Text = "Create New Map";
+            neMapBtn.UseVisualStyleBackColor = true;
+            neMapBtn.Click += newMapBtn_Click;
             // 
-            // button2
+            // playBtn
             // 
-            button2.Anchor = AnchorStyles.Top;
-            button2.Location = new Point(107, 161);
-            button2.Name = "button2";
-            button2.Size = new Size(69, 23);
-            button2.TabIndex = 2;
-            button2.Text = "Play Map";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            playBtn.Anchor = AnchorStyles.Top;
+            playBtn.Location = new Point(107, 161);
+            playBtn.Name = "playBtn";
+            playBtn.Size = new Size(69, 23);
+            playBtn.TabIndex = 2;
+            playBtn.Text = "Play Map";
+            playBtn.UseVisualStyleBackColor = true;
+            playBtn.Click += playBtn_Click;
             // 
             // label1
             // 
@@ -105,8 +105,8 @@
             Controls.Add(heightBox);
             Controls.Add(widthBox);
             Controls.Add(label1);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(playBtn);
+            Controls.Add(neMapBtn);
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Main";
@@ -117,8 +117,8 @@
 
         #endregion
 
-        private Button button1;
-        private Button button2;
+        private Button neMapBtn;
+        private Button playBtn;
         private Label label1;
         private TextBox widthBox;
         private TextBox heightBox;

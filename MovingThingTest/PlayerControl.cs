@@ -61,18 +61,18 @@ namespace MovingThingTest
             grid.updateScreenSize(Width, Height);
             //box.UpdatePos(grid, grid.pathStack);
             List<Enemy> deadEnemies = new List<Enemy>();
-            foreach(Enemy enemy in enemies)
+            foreach (Enemy enemy in enemies)
             {
                 enemy.updatePos();
                 if (enemy.health <= 0) { deadEnemies.Add(enemy); }
             }
-            foreach(Enemy enemy in deadEnemies)
+            foreach (Enemy enemy in deadEnemies)
             {
                 enemies.Remove(enemy);
             }
-            
+
             squad.updatePos(cellStack, grid, enemies);
-            pictureBox1.Invalidate();
+            pictureBox.Invalidate();
         }
 
         private void modeButton_Click(object sender, EventArgs e)
@@ -85,7 +85,7 @@ namespace MovingThingTest
 
 
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
             if (drag)
             {
@@ -102,7 +102,7 @@ namespace MovingThingTest
             grid.drawGrid(e);
             //box.drawBox(e, grid);
             squad.drawSquad(e, grid, grid.cellSize);
-            foreach(Enemy enemy in enemies)
+            foreach (Enemy enemy in enemies)
             {
                 enemy.drawSoldier(e, grid, grid.cellSize);
             }
@@ -111,7 +111,7 @@ namespace MovingThingTest
             //grid.drawWalls(e);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBox_Click(object sender, EventArgs e)
         {
             MouseEventArgs me = (MouseEventArgs)e;
             Point clickPos = me.Location;
@@ -142,7 +142,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (mode == 1)
             {
@@ -152,7 +152,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             if (mode == 1)
             {
@@ -160,7 +160,7 @@ namespace MovingThingTest
             }
         }
 
-        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
+        private void pictureBox_MouseWheel(object sender, MouseEventArgs e)
         {
             grid.cameraSize.Y = grid.cameraSize.Y * 1 - e.Delta / 200f;
             grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
