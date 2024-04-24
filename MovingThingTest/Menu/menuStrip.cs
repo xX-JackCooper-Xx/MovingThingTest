@@ -9,33 +9,44 @@ namespace MovingThingTest.Menu
 {
     public class menuStrip
     {
+        // Name of the menu strip
         public string name;
+        // List of menu items
         private List<string> items = new List<string>();
+        // List of colors for menu items
         private List<Color> colours = new List<Color>();
+        // Flag indicating if the menu strip is open
         public bool open = false;
+        // Padding between menu items
         private int padding = 20;
 
+        // Pen and brush for drawing
         public Pen pen = new Pen(Color.Black, 3);
         public SolidBrush brush = new SolidBrush(Color.Black);
 
+        // Constructor
         public menuStrip(string name)
         {
             this.name = name;
         }
 
+        // Method to add a menu item with color
         public void addItem(string item, Color color)
         {
             items.Add(item);
             colours.Add(color);
         }
 
+        // Method to draw the menu strip
         public void drawMenu(PaintEventArgs e, int width, int topLeft, int imageSize, Font font)
         {
             brush.Color = Color.Black;
             pen.Width = 3;
             font = new Font(font.Name, 20, FontStyle.Bold);
-            if(open)
+            // If menu strip is open
+            if (open)
             {
+                // Draw triangle indicator
                 PointF[] tri = {
                     new PointF(10, topLeft+10),
                     new PointF(30, topLeft + 10),
@@ -44,11 +55,12 @@ namespace MovingThingTest.Menu
                 e.Graphics.DrawPolygon(pen, tri);
                 e.Graphics.DrawString(name, font, brush, 40, topLeft);
 
-                int cols = width / (imageSize+padding);
+                int cols = width / (imageSize + padding);
 
-                int xPad = (width - (cols * imageSize + padding * (cols - 1)))/2;
+                int xPad = (width - (cols * imageSize + padding * (cols - 1))) / 2;
 
-                for(int i = 0; i < items.Count; i++)
+                // Draw menu items
+                for (int i = 0; i < items.Count; i++)
                 {
                     int col = i / cols;
                     int row = i % cols;
@@ -60,9 +72,10 @@ namespace MovingThingTest.Menu
                     font = new Font(font.Name, 15, FontStyle.Regular);
                     e.Graphics.DrawString(items[i], font, brush, new PointF(row * (imageSize + padding) + xPad, col * (imageSize + padding) + topLeft + 40));
                 }
-                
+
             }
 
+            // If menu strip is closed
             if (!open)
             {
                 PointF[] tri = {
@@ -74,10 +87,11 @@ namespace MovingThingTest.Menu
                 e.Graphics.DrawPolygon(pen, tri);
                 e.Graphics.DrawString(name, font, brush, 40, topLeft);
                 pen.Width = 1;
-                e.Graphics.DrawLine(pen, new Point(5, topLeft + 35), new Point(width-5, topLeft + 35));
+                e.Graphics.DrawLine(pen, new Point(5, topLeft + 35), new Point(width - 5, topLeft + 35));
             }
         }
 
+        // Method to calculate the size of the menu strip when open
         public int calculateSize(int width, int imageSize)
         {
             if (open)
@@ -85,7 +99,7 @@ namespace MovingThingTest.Menu
                 imageSize = imageSize + padding;
                 int cols = width / imageSize;
                 float height = (float)items.Count / cols;
-                return (int)Math.Ceiling(height)*imageSize;
+                return (int)Math.Ceiling(height) * imageSize;
             }
             else
             {
@@ -93,11 +107,13 @@ namespace MovingThingTest.Menu
             }
         }
 
+        // Method to toggle the open state of the menu strip
         public void changeOpen()
         {
             open = !open;
         }
 
+        // Method to select a menu item based on click position
         public int selectItem(Point clickPos, int size, int width, int imageSize)
         {
             bool selectX = false;
@@ -117,6 +133,7 @@ namespace MovingThingTest.Menu
             int col = 0;
             int row = 0;
 
+            // Find the column and row of the clicked position
             for (int i = 0; i < cols; i++)
             {
                 if (xPad > clickPos.X)
@@ -124,7 +141,7 @@ namespace MovingThingTest.Menu
                     break;
                 }
                 xPos += imageSize;
-                if(xPos > clickPos.X)
+                if (xPos > clickPos.X)
                 {
                     col = i;
                     selectX = true;
@@ -134,17 +151,16 @@ namespace MovingThingTest.Menu
                 {
                     xPos += padding;
                 }
-                if(xPos > clickPos.X)
+                if (xPos > clickPos.X)
                 {
                     break;
                 }
             }
 
-
-            for(int j = 0; j < rows; j++)
+            for (int j = 0; j < rows; j++)
             {
                 yPos += imageSize;
-                if(yPos > clickPos.Y)
+                if (yPos > clickPos.Y)
                 {
                     row = j;
                     selectY = true;
@@ -160,7 +176,8 @@ namespace MovingThingTest.Menu
                 }
             }
 
-            if(selectX && selectY)
+            // Return the index of the selected item
+            if (selectX && selectY)
             {
                 return (row * cols + col);
             }

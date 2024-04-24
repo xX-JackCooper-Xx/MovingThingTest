@@ -42,8 +42,8 @@
             mapPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             mapPanel.AutoSize = true;
             mapPanel.BackColor = Color.Green;
-            mapPanel.Controls.Add(exitBtn);
-            mapPanel.Controls.Add(LoadBtn);
+            this.Controls.Add(exitBtn);
+            this.Controls.Add(LoadBtn);
             mapPanel.Location = new Point(0, 0);
             mapPanel.Margin = new Padding(0);
             mapPanel.Name = "mapPanel";

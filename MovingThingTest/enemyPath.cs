@@ -5,35 +5,45 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-
 namespace MovingThingTest
 {
+    // Class representing a path for enemies to follow
     public class enemyPath
     {
+        // List of anchor cells defining the path
         public List<Cell> pathAnchors = new List<Cell>();
+        // List of lists containing cells representing different sections of the path
         public List<dynamic> pathCellsLists = new List<dynamic>();
+        // Stack to hold path cells
         Stack<Cell> path = new Stack<Cell>();
+        // Boolean indicating if the path loops
         public bool loop;
+        // Brush and color for drawing the path
         public SolidBrush brush = new SolidBrush(Color.Red);
         public Color color = Color.Red;
 
-        public enemyPath() { 
-        
+        // Default constructor
+        public enemyPath()
+        {
+
         }
+
+        // Constructor with loop parameter
         public enemyPath(bool loop)
         {
             this.loop = loop;
         }
 
-
-
+        // Method to generate a string representation of the path for saving
         public string saveString()
         {
             string str = "";
-            foreach (Cell cell in pathAnchors) 
+            // Serialize anchor cells
+            foreach (Cell cell in pathAnchors)
             {
                 str += cell.row.ToString() + "," + cell.col.ToString() + ",";
             }
+            // Serialize path cell lists
             foreach (List<Cell> list in pathCellsLists)
             {
                 str += "\n";
@@ -43,18 +53,24 @@ namespace MovingThingTest
                 }
 
             }
+            // Serialize loop status and color
             str += "\n";
             str += loop.ToString();
             str += "\n";
             str += color.ToArgb().ToString();
             return str;
         }
+
+        // Method to add a point to the path
         public void addPoint(Cell cell, Grid grid)
         {
+            // Check if loop is not set
             if (!loop)
             {
+                // Check if the cell is already an anchor
                 if (pathAnchors.Contains(cell))
                 {
+                    // Remove the cell if it's the last anchor
                     if (pathAnchors[pathAnchors.Count - 1] == cell)
                     {
                         pathAnchors.RemoveAt(pathAnchors.Count - 1);
@@ -64,14 +80,17 @@ namespace MovingThingTest
                         }
                         return;
                     }
+                    // Set loop if the first anchor is repeated
                     if (pathAnchors[0] == cell)
                     {
                         loop = true;
                     }
                 }
 
+                // Add the cell as an anchor
                 pathAnchors.Add(cell);
 
+                // Calculate path cells between anchor points
                 if (pathAnchors.Count > 1)
                 {
                     pathCellsLists.Add(new List<Cell>());
@@ -85,6 +104,7 @@ namespace MovingThingTest
             }
             else
             {
+                // Disable loop if the first anchor is repeated
                 if (pathAnchors[0] == cell)
                 {
                     loop = false;
@@ -97,18 +117,22 @@ namespace MovingThingTest
             }
         }
 
+        // Method to place the path over a cell
         public bool placeOver(Cell cell, Grid grid)
         {
-            foreach(Cell anch in pathAnchors)
+            // Check if the cell is already an anchor
+            foreach (Cell anch in pathAnchors)
             {
                 if (anch == cell)
                 {
                     return false;
                 }
             }
+
+            // Check if the cell is part of a path section
             int i = 0;
-            List<int> toRemove = new List<int> ();
-            foreach(List<Cell> pathPart in pathCellsLists)
+            List<int> toRemove = new List<int>();
+            foreach (List<Cell> pathPart in pathCellsLists)
             {
                 foreach (Cell c in pathPart)
                 {
@@ -120,12 +144,14 @@ namespace MovingThingTest
                 }
                 i++;
             }
-            foreach(int j in toRemove)
+
+            // Replace the affected path sections
+            foreach (int j in toRemove)
             {
                 pathCellsLists.RemoveAt(j);
                 pathCellsLists.Insert(j, new List<Cell>());
                 grid.resetPathFind();
-                Stack<Cell> stack = grid.PathFind(grid, pathAnchors[j], pathAnchors[j+1]);
+                Stack<Cell> stack = grid.PathFind(grid, pathAnchors[j], pathAnchors[j + 1]);
                 foreach (Cell pathCell in stack)
                 {
                     pathCellsLists[j].Add(pathCell);
@@ -136,18 +162,26 @@ namespace MovingThingTest
 
     }
 
+    // Class representing an existing enemy path
     public class existingEnemyPath : enemyPath
     {
+        // Integer representing the path number
         public int num;
-        public existingEnemyPath(bool loop) : base(loop){ 
-            
+
+        // Constructor with loop parameter
+        public existingEnemyPath(bool loop) : base(loop)
+        {
+
         }
 
-        public existingEnemyPath(int num, Color color) {
+        // Constructor with number and color parameters
+        public existingEnemyPath(int num, Color color)
+        {
             this.num = num;
             this.color = color;
         }
 
+        // Constructor with loop, path anchors, path cells, and color parameters
         public existingEnemyPath(bool loop, List<Cell> pathAnchors, List<dynamic> pathCellsLists, Color color)
         {
             this.loop = loop;
@@ -156,15 +190,17 @@ namespace MovingThingTest
             this.color = color;
         }
 
+        // Method to draw the path
         public void drawPath(PaintEventArgs e, Vector2 topleft, float cellSize, Font font)
         {
-            font = new Font(font.Name, cellSize*0.8f, FontStyle.Regular);
+            font = new Font(font.Name, cellSize * 0.8f, FontStyle.Regular);
             Pen p = new Pen(brush, cellSize * 0.4f);
             RectangleF rect;
             foreach (List<Cell> pathPart in pathCellsLists)
             {
                 for (int i = 1; i < pathPart.Count; i++)
                 {
+                    // Draw lines between path cells
                     e.Graphics.DrawLine(p, new Point((int)((pathPart[i - 1].col - topleft.X + 0.5f) * cellSize), (int)((pathPart[i - 1].row - topleft.Y + 0.5f) * cellSize)), new Point((int)((pathPart[i].col - topleft.X + 0.5f) * cellSize), (int)((pathPart[i].row - topleft.Y + 0.5f) * cellSize)));
                 }
 
@@ -173,6 +209,7 @@ namespace MovingThingTest
             string str;
             foreach (Cell anchor in pathAnchors)
             {
+                // Draw path anchors
                 if (loop && j == pathAnchors.Count)
                 {
                     str = "L";
