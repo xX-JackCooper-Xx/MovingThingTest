@@ -20,6 +20,7 @@ namespace MovingThingTest
         bool shooting = false;
         double rayAngle = 0;
         Vector2 shootingPoint;
+        List<Ray> rays = new List<Ray>();
         public Soldier(Cell currentCell)
         {
             this.currentCell = currentCell;
@@ -50,7 +51,10 @@ namespace MovingThingTest
         public virtual void drawSoldier(PaintEventArgs e, Grid grid, float size)
         { 
             SolidBrush brush = new SolidBrush(color);
+            int k = 1920;
+            double d = (Math.PI / 2) / k;
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            rays = new List<Ray>();
             e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
             if (shooting)
             {
@@ -59,9 +63,29 @@ namespace MovingThingTest
             }
             else
             {
-                viewRay = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
+                for (int i = 0; i < k; i++)
+                {
+                    rays.Add(Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 4 - d*i));
+                    if (i % (k/10) == 0)
+                    {
+                        //rays[i].drawRay(e, topLeft, size);
+                    }
+                }
             }
-            viewRay.drawRay(e, topLeft, size);
+            int j = 1;
+            foreach (Ray ray in rays)
+            {
+                double angle = Math.Atan(1 / ray.magnitude);
+                if (angle > Math.PI/6)
+                {
+                    angle = Math.PI/6;
+                }
+                double proportion = angle / (Math.PI / 6);
+                double rectSize = proportion * 1080;
+                Rectangle rect = new Rectangle(1920 - j, (int)( -rectSize/2 + 1080/2), 1, (int)rectSize);
+                e.Graphics.FillRectangle(brush, rect);
+                j++;
+            }
         }
 
         public void checkForEnemy(List<Enemy> enemies, Grid grid)
