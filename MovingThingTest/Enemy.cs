@@ -31,7 +31,7 @@ namespace MovingThingTest
             }
         }
 
-        public override void drawSoldier(PaintEventArgs e, Grid grid, float size)
+        public override void drawSoldier(PaintEventArgs e, Grid grid, float size, int a, int b)
         {
             SolidBrush brush = new SolidBrush(color);
             Pen p = new Pen(Color.Black, 4);
@@ -45,7 +45,7 @@ namespace MovingThingTest
                 e.Graphics.FillRectangle(brush, rect);
                 brush.Color = Color.Lime;
                 RectangleF rect2 = rect;
-                rect2.Width = rect.Width*health/100f;
+                rect2.Width = rect.Width * health / 100f;
                 e.Graphics.FillRectangle(brush, rect2);
                 e.Graphics.DrawRectangles(p, new[] { rect });
             }
@@ -62,7 +62,22 @@ namespace MovingThingTest
             }
             if (pathStack.Count > 0)
             {
-                base.updatePos(pathStack, 0.05f, 2);
+                if (currentCell.gridCoord != gridCoord)
+                {
+                    gridCoord += movingVec;
+                    gridCoord = new Vector2(MathF.Round(gridCoord.X, 2), MathF.Round(gridCoord.Y, 2));
+                }
+                else if (pathStack.Count > 0)
+                {
+                    currentCell = pathStack.Pop();
+                    if (currentCell.gridCoord == gridCoord)
+                    {
+                        currentCell = pathStack.Pop();
+                    }
+                    movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * 0.05f;
+                    gridCoord += movingVec;
+                }
+                centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
                 return;
             }
 

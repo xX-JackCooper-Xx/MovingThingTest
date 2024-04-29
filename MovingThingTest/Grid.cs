@@ -144,12 +144,12 @@ namespace MovingThingTest
         public void drawGrid(PaintEventArgs e)
         {
             Vector2 topLeftCell = new Vector2(MathF.Floor(cameraPosition.X - cameraSize.X / 2), MathF.Floor(cameraPosition.Y - cameraSize.Y / 2));
-            Vector2 topLeft = new Vector2((cameraPosition.X - cameraSize.X / 2),(cameraPosition.Y - cameraSize.Y / 2));
+            Vector2 topLeft = new Vector2((cameraPosition.X - cameraSize.X / 2), (cameraPosition.Y - cameraSize.Y / 2));
             Vector2 bottomRightCell = new Vector2(MathF.Ceiling(cameraPosition.X + cameraSize.X / 2), MathF.Ceiling(cameraPosition.Y + cameraSize.Y / 2));
 
             for (int i = (int)topLeftCell.X; i < (int)bottomRightCell.X; i++)
             {
-                for(int j = (int)topLeftCell.Y; j < (int)bottomRightCell.Y; j++)
+                for (int j = (int)topLeftCell.Y; j < (int)bottomRightCell.Y; j++)
                 {
                     if (i >= 0 && j >= 0 && i < cols && j < rows)
                     {

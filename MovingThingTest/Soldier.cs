@@ -12,7 +12,7 @@ namespace MovingThingTest
         public Cell currentCell;
         public Vector2 gridCoord;
         protected Vector2 movingVec = new Vector2(0, 0);
-        protected Vector2 centerCoord;
+        public Vector2 centerCoord;
         public int direction = 0;
         protected Color color = Color.Red;
         Ray ray = new Ray();
@@ -28,63 +28,87 @@ namespace MovingThingTest
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
         }
 
-        public void updatePos(Stack<Cell> cellStack, float speed, int i)
+        public void updatePos(Stack<Cell> cellStack, float speed, int i, Grid grid)
         {
-            if (currentCell.gridCoord != gridCoord)
-            {
-                gridCoord += movingVec;
-                gridCoord = new Vector2(MathF.Round(gridCoord.X, i), MathF.Round(gridCoord.Y, i));
-            }
-            else if (cellStack.Count > 0)
-            {
-                currentCell = cellStack.Pop();
-                if (currentCell.gridCoord == gridCoord)
-                {
-                    currentCell = cellStack.Pop();
-                }
-                movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * speed;
-                gridCoord += movingVec;
-            }
+            //if (currentCell.gridCoord != gridCoord)
+            //{
+            //    gridCoord += movingVec;
+            //    gridCoord = new Vector2(MathF.Round(gridCoord.X, i), MathF.Round(gridCoord.Y, i));
+            //}
+            //else if (cellStack.Count > 0)
+            //{
+            //    currentCell = cellStack.Pop();
+            //    if (currentCell.gridCoord == gridCoord)
+            //    {
+            //        currentCell = cellStack.Pop();
+            //    }
+            //    movingVec = Vector2.Normalize(currentCell.gridCoord - gridCoord) * speed;
+            //    gridCoord += movingVec;
+            //}
             centerCoord = new Vector2(gridCoord.X + 0.5f, gridCoord.Y + 0.5f);
         }
 
-        public virtual void drawSoldier(PaintEventArgs e, Grid grid, float size)
-        { 
-            SolidBrush brush = new SolidBrush(color);
-            int k = 1920;
-            double d = (Math.PI / 2) / k;
+        public virtual void drawSoldier(PaintEventArgs e, Grid grid, float size, int screenHeight, int screenWidth)
+        {
+            List<Point> points = new List<Point>();
+            List<Point> seemPoints = new List<Point>();
+            SolidBrush brush = new SolidBrush(Color.Gray);
+            Pen p = new Pen(Color.Black, 5);
+            double fov = 2 * Math.Atan(Math.Tan(Math.PI / 6) * 16d / 9d);
+            double d = (fov) / screenWidth;
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
             rays = new List<Ray>();
             e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
-            if (shooting)
+            for (int i = 0; i < screenWidth; i = i + 1)
             {
-                viewRay = Ray.castRay(grid, centerCoord, rayAngle);
-                viewRay.endPos = shootingPoint;
+                rays.Add(Ray.castRay(grid, centerCoord, direction/360f * 2*Math.PI - fov / 2 - d * i));
             }
-            else
-            {
-                for (int i = 0; i < k; i++)
-                {
-                    rays.Add(Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 4 - d*i));
-                    if (i % (k/10) == 0)
-                    {
-                        //rays[i].drawRay(e, topLeft, size);
-                    }
-                }
-            }
-            int j = 1;
+            int j = 0;
             foreach (Ray ray in rays)
             {
-                double angle = Math.Atan(1 / ray.magnitude);
-                if (angle > Math.PI/6)
-                {
-                    angle = Math.PI/6;
+                //double angle = Math.Atan(1 / ray.magnitude);
+                //if (angle > Math.PI / 6 )
+                //{
+                //    angle = Math.PI / 6;
+                //}
+                //double proportion = angle / (Math.PI / 6);
+                //double rectSize = proportion * screenHeight;
+                //points.Add(new Point(screenWidth - j, (int)(rectSize / 2 + screenHeight / 2)));
+                double angleDifference = direction / 180f * Math.PI - ray.angle - Math.PI/2;
+                if(angleDifference < 0) {
+                    angleDifference += 2 * Math.PI;
                 }
-                double proportion = angle / (Math.PI / 6);
-                double rectSize = proportion * 1080;
-                Rectangle rect = new Rectangle(1920 - j, (int)( -rectSize/2 + 1080/2), 1, (int)rectSize);
-                e.Graphics.FillRectangle(brush, rect);
-                j++;
+                if(angleDifference > 2 * Math.PI)
+                {
+                    angleDifference -= 2 * Math.PI;
+                }
+                double rectSize = 2 * screenHeight / (ray.magnitude*Math.Cos(angleDifference));
+                if(rectSize > screenHeight)
+                {
+                    rectSize = screenHeight;
+                }
+                points.Add(new Point(screenWidth - j, (int)(rectSize / 2 + screenHeight / 2)));
+                //Rectangle rect = new Rectangle(screenWidth - j, (int)(-rectSize / 2 + screenHeight / 2), 1, (int)rectSize);
+                //e.Graphics.FillRectangle(brush, rect);
+                if (j + 1 < rays.Count)
+                {
+                    if ((int)ray.endPos.X != (int)rays[j + 1].endPos.X || (int)ray.endPos.Y != (int)rays[j + 1].endPos.Y)
+                    {
+                        seemPoints.Add(new Point(screenWidth - j, (int)(rectSize / 2 + screenHeight / 2)));
+                    }
+                }
+                j = j + 1;
+            }
+            for (int i = points.Count - 1; i >= 0; i--)
+            {
+                points.Add(new Point(points[i].X, screenHeight - points[i].Y));
+            }
+            e.Graphics.FillPolygon(brush, points.ToArray());
+            e.Graphics.DrawPolygon(p, points.ToArray());
+            List<Point> tempPoints = new List<Point>();
+            foreach(Point point in seemPoints) {
+                Point lowPoint = new Point(point.X, screenHeight - point.Y);
+                e.Graphics.DrawLine(p, point, lowPoint);
             }
         }
 

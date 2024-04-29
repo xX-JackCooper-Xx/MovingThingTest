@@ -11,7 +11,7 @@ namespace MovingThingTest
 {
     public class Squad
     {
-        List<Soldier> units = new List<Soldier>();
+        public List<Soldier> units = new List<Soldier>();
         public Cell currentCell;
         public Vector2 gridCoord;
         Vector2 movingVec = new Vector2(0, 0);
@@ -73,14 +73,14 @@ namespace MovingThingTest
             loadFormation(formation, grid);
         }
 
-        public void drawSquad(PaintEventArgs e, Grid grid, float size)
+        public void drawSquad(PaintEventArgs e, Grid grid, float size, int screenHeight, int screenWidth)
         {
-            //SolidBrush brush = new SolidBrush(Color.Yellow);
-            //Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
-            //e.Graphics.FillRectangle(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
-            //Ray ray = Ray.castRay(grid, centerCoord, direction * Math.PI / 2 - Math.PI / 2);
-            //ray.drawRay(e, topLeft, size);
-            drawUnits(e, grid, size);
+            SolidBrush brush = new SolidBrush(Color.Yellow);
+            Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
+            e.Graphics.FillEllipse(brush, (units[0].gridCoord.X - topLeft.X) * size, (units[0].gridCoord.Y - topLeft.Y) * size, size, size);
+            Ray ray = Ray.castRay(grid, units[0].centerCoord, units[0].direction/360d * Math.PI *2 - Math.PI / 2);
+            ray.drawRay(e, topLeft, size);
+            //drawUnits(e, grid, size, screenHeight, screenWidth);
         }
 
         public void updateDiretion()
@@ -316,19 +316,19 @@ namespace MovingThingTest
                     cellStacks[i] = grid.PathFind(grid, s.currentCell, targetCells[i]);
                     grid.resetPathFind();
                 }
-                s.updatePos(cellStacks[i], 0.1f, 1);
-                s.direction = formationDirections[i];
+                s.updatePos(cellStacks[i], 0.1f, 1, grid);
+                //s.direction = formationDirections[i];
                 i++;
                 s.checkForEnemy(enemies, grid);
             }
             
         }
 
-        public void drawUnits(PaintEventArgs e, Grid grid, float size)
+        public void drawUnits(PaintEventArgs e, Grid grid, float size, int screenHeight, int screenWdith)
         {
             foreach(Soldier s in units)
             {
-                s.drawSoldier(e, grid, size);
+                s.drawSoldier(e, grid, size, screenHeight, screenWdith);
             }
         }
     }

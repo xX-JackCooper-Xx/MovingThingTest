@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,13 +16,17 @@ namespace MovingThingTest
         string filePath;
         public string item;
         public int pathNum;
-        MenuSelector ms = new MenuSelector("play");
         PlayerControl pc;
         int squadSize = 5;
         Thread th;
+        bool turning;
+        Keys turnKey;
+        bool moving;
+        Keys moveKey;
         public PlayerForm(int squadSize)
         {
             InitializeComponent();
+            WindowState = FormWindowState.Maximized;
             this.squadSize = squadSize;
             pc = new PlayerControl(squadSize);
         }
@@ -35,21 +40,46 @@ namespace MovingThingTest
             mapPanel.Controls.Add(pc);
             pc.Show();
 
-
-            ms.AutoScroll = true;
-            ms.Dock = DockStyle.Fill;
-            controlsPanel.Controls.Add(ms);
-            ms.Show();
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (ms.pathNumber != pathNum)
+            if (turning)
             {
-                pathNum = ms.pathNumber;
-                pc.squad.changeFormation(pathNum, pc.grid);
+                switch (turnKey)
+                {
+                    case Keys.L:
+                        //mapPanel.Controls.Remove(pc);
+                        pc.squad.units[0].direction = (pc.squad.units[0].direction + 2) % 360;
+                        //mapPanel.Controls.Add(pc);
+                        break;
+                    case Keys.K:
+                        pc.squad.units[0].direction = (pc.squad.units[0].direction - 2) % 360;
+                        break;
+                }
             }
+            if (moving)
+            {
+                int forward = 0;
+                switch (moveKey)
+                {
+                    case Keys.W:
+                        forward = 1;
+                        break;
+                    case Keys.S:
+                        forward = -1;
+                        break;
+                }
 
+                double angleRad = pc.squad.units[0].direction / 360d * Math.PI * 2;
+                Vector2 dirVec = new Vector2(0.1f * (float)Math.Sin(angleRad), 0.1f * -(float)(Math.Cos(angleRad))) * forward;
+                Vector2 nextCoord = pc.squad.units[0].gridCoord + dirVec;
+                Ray ray = Ray.castRay(pc.grid, pc.squad.units[0].centerCoord, angleRad - Math.PI * forward / 2);
+                if (ray.magnitude >= 0.1)
+                {
+                    pc.squad.units[0].gridCoord += dirVec;
+                }
+            }
         }
 
         private void LoadBtn_Click(object sender, EventArgs e)
@@ -67,7 +97,6 @@ namespace MovingThingTest
         private void loadFile()
         {
             mapPanel.Controls.Remove(pc);
-            controlsPanel.Controls.Remove(ms);
             int row;
             int col;
             Grid grid;
@@ -156,12 +185,6 @@ namespace MovingThingTest
             pc.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(pc);
             pc.Show();
-
-            ms = new MenuSelector(enemyPaths, "play");
-            ms.AutoScroll = true;
-            ms.Dock = DockStyle.Fill;
-            controlsPanel.Controls.Add(ms);
-            ms.Show();
         }
 
         private void exitBtn_Click(object sender, EventArgs e)
@@ -175,6 +198,47 @@ namespace MovingThingTest
         private void openMainForm()
         {
             Application.Run(new Main());
+        }
+
+        private void mapPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void PlayerForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.K || e.KeyCode == Keys.L)
+            {
+                turning = true;
+                turnKey = e.KeyCode;
+            }
+            if (e.KeyCode == Keys.W || e.KeyCode == Keys.S)
+            {
+                moving = true;
+                moveKey = e.KeyCode;
+            }
+        }
+
+        private void PlayerForm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+        private void PlayerForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+
+        }
+
+        private void PlayerForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.K || e.KeyCode == Keys.L)
+            {
+                turning = false;
+            }
+            if (e.KeyCode == Keys.W || e.KeyCode == Keys.S)
+            {
+                moving = false;
+            }
         }
     }
 }

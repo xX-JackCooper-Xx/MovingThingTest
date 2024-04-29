@@ -75,6 +75,9 @@
             Controls.Add(pictureBox);
             Name = "PlayerControl";
             Size = new Size(800, 450);
+            KeyDown += PlayerControl_KeyDown;
+            KeyPress += PlayerControl_KeyPress;
+            PreviewKeyDown += PlayerControl_PreviewKeyDown;
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
         }

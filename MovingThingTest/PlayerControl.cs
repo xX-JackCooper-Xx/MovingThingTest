@@ -99,12 +99,16 @@ namespace MovingThingTest
             {
                 grid.cameraPosition = box.gridCoord + new Vector2(0.5f, 0.5f);
             }
-            grid.drawGrid(e);
+
             //box.drawBox(e, grid);
-            squad.drawSquad(e, grid, grid.cellSize);
+            SolidBrush brush = new SolidBrush(Color.FromArgb(255, 50,50,50));
+            e.Graphics.FillRectangle(brush, 0, this.Height/2, this.Width, this.Height / 2);
+            squad.units[0].drawSoldier(e, grid, grid.cellSize, this.Height, this.Width);
+            grid.drawGrid(e);
+            squad.drawSquad(e, grid, grid.cellSize, this.Height, this.Width);
             foreach (Enemy enemy in enemies)
             {
-                enemy.drawSoldier(e, grid, grid.cellSize);
+                enemy.drawSoldier(e, grid, grid.cellSize, 1, 1);
             }
             //box.vision(grid, e);
             //box.drawVisionCone(grid, e);
@@ -166,6 +170,21 @@ namespace MovingThingTest
             grid.cameraSize.X = grid.cameraSize.Y * grid.cameraRatio;
             grid.cellSize = grid.calculateCellSize();
             //box.boxSize = grid.cellSize;
+        }
+
+        private void PlayerControl_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void PlayerControl_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+        private void PlayerControl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+
         }
     }
 }
