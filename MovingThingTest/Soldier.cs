@@ -54,15 +54,18 @@ namespace MovingThingTest
             List<Point> seemPoints = new List<Point>();
             SolidBrush brush = new SolidBrush(Color.Gray);
             Pen p = new Pen(Color.Black, 5);
-            double fov = 2 * Math.Atan(Math.Tan(Math.PI / 6) * 16d / 9d);
-            double d = (fov) / screenWidth;
+            double fov = 60d / 360d * Math.PI * 2;
+            //double fov = Math.PI / 2;
+            double d = (fov) / (screenWidth);
             Vector2 topLeft = new Vector2((grid.cameraPosition.X - grid.cameraSize.X / 2), (grid.cameraPosition.Y - grid.cameraSize.Y / 2));
             rays = new List<Ray>();
             e.Graphics.FillEllipse(brush, (gridCoord.X - topLeft.X) * size, (gridCoord.Y - topLeft.Y) * size, size, size);
             for (int i = 0; i < screenWidth; i = i + 1)
             {
-                rays.Add(Ray.castRay(grid, centerCoord, direction/360f * 2*Math.PI - fov / 2 - d * i));
+                rays.Add(Ray.castRay(grid, centerCoord, direction/360f * 2*Math.PI - Math.PI/2 + fov/2 - d * i));
             }
+            rays[0].drawRay(e, topLeft, size);
+            rays[rays.Count - 1].drawRay(e, topLeft, size);
             int j = 0;
             foreach (Ray ray in rays)
             {
@@ -74,14 +77,16 @@ namespace MovingThingTest
                 //double proportion = angle / (Math.PI / 6);
                 //double rectSize = proportion * screenHeight;
                 //points.Add(new Point(screenWidth - j, (int)(rectSize / 2 + screenHeight / 2)));
-                double angleDifference = direction / 180f * Math.PI - ray.angle - Math.PI/2;
-                if(angleDifference < 0) {
-                    angleDifference += 2 * Math.PI;
-                }
-                if(angleDifference > 2 * Math.PI)
-                {
-                    angleDifference -= 2 * Math.PI;
-                }
+                //double angleDifference = direction / 180f * Math.PI - ray.angle - Math.PI/2;
+                //if(angleDifference < 0) {
+                //    angleDifference += 2 * Math.PI;
+                //}
+                //if(angleDifference > 2 * Math.PI)
+                //{
+                //    angleDifference -= 2 * Math.PI;
+                //}
+                double angleDifference = (direction/180d * Math.PI - ray.angle + Math.PI/2d);
+                //double angleDifference = 0;
                 double rectSize = 2 * screenHeight / (ray.magnitude*Math.Cos(angleDifference));
                 if(rectSize > screenHeight)
                 {
